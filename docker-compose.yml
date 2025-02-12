@@ -1,18 +1,141 @@
 version: '3.8'
 services:
-  mongo:
-    image: mongo
+  # Jenkins
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
     ports:
-      - "27017:27017"
-  backend:
-    build: ./backend
+      - "8080:8080"
+    volumes:
+      - jenkins_data:/var/jenkins_home
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jenkins.rule=Host(`jenkins.localhost`)"
+      - "traefik.http.services.jenkins.loadbalancer.server.port=8080"
+    networks:
+      - web
+  # Traefik - Reverse Proxy
+  traefik:
+    image: traefik:v2.5
+    container_name: traefik
+    command:
+      - "--api.insecure=true" # Enable dashboard (not recommended for production)
+      - "--providers.docker=true" # Enable Docker provider
+      - "--entryPoints.web.address=:80" # Expose HTTP port 80
     ports:
-      - "5000:5000"
-    depends_on:
-      - mongo
+      - "80:80" # HTTP
+      - "8081:8082" # Traefik dashboard
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock" # Allow Traefik to dynamically detect containers
+    networks:
+      - web
+
+  # Frontend - React/Vue/Angular App
   frontend:
-    build: ./frontend
-    ports:
-      - "3000:3000"
+    build:
+      context: ./frontend
+    container_name: tip_top_frontend
+    environment:
+      - PORT=4200
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)" # Route traffic via Traefik
+      - "traefik.http.services.frontend.loadbalancer.server.port=4200" # Expose frontend
+    networks:
+      - web
     depends_on:
       - backend
+
+  # Backend - Node.js/Express API
+  backend:
+    build:
+      context: ./backend
+    container_name: tip_top_backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"
+      - "traefik.http.services.backend.loadbalancer.server.port=5000" # Expose API
+    networks:
+      - web
+
+  # Database - MySQL
+  db:
+    image: mysql:8.0
+    container_name: tip_top_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: tip_top_game
+    # Uncomment if you want to access MySQL from outside Docker
+    # ports:
+    #   - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # Prometheus - Monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    platform: linux/${TARGETARCH:-amd64}
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml # Custom config
+      - prometheus_data:/prometheus # Persist Prometheus data
+    ports:
+      - "9090:9090" # Prometheus UI
+    networks:
+      - web
+
+  # Grafana - Visualization
+  grafana:
+    image: grafana/grafana:latest
+    platform: linux/${TARGETARCH:-amd64}
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin # Default admin password
+    ports:
+      - "3001:3000" # Avoid conflict with React port 3000
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - web
+    volumes:
+      - grafana_data:/var/lib/grafana # Persist Grafana settings
+
+  # SonarQube Database - PostgreSQL
+  sonarqube_db:
+    image: postgres:latest
+    container_name: sonarqube_db
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+      POSTGRES_DB: sonarqube
+    volumes:
+      - sonarqube_db_data:/var/lib/postgresql/data # Persist SonarQube DB
+    networks:
+      - web
+
+  # SonarQube - Code Quality Analysis
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    environment:
+      SONARQUBE_JDBC_URL: jdbc:postgresql://sonarqube_db:5432/sonarqube
+      SONARQUBE_JDBC_USERNAME: sonar
+      SONARQUBE_JDBC_PASSWORD: sonar
+    depends_on:
+      - sonarqube_db
+    ports:
+      - "9000:9000"
+    networks:
+      - web
+
+networks:
+  web:
+    driver: bridge # Isolated network for services
+
+volumes:
+  db_data:
+  sonarqube_db_data:
+  grafana_data:
+  prometheus_data:
