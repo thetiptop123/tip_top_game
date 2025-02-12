@@ -4,29 +4,37 @@ services:
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
+    user: root  # Run as root to have Docker permissions
     ports:
       - "8080:8080"
     volumes:
       - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock  # Mount Docker socket
+      - /usr/bin/docker:/usr/bin/docker  # Mount Docker binary
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jenkins.rule=Host(`jenkins.localhost`)"
       - "traefik.http.services.jenkins.loadbalancer.server.port=8080"
     networks:
       - web
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DOCKER_CERT_PATH=
+      - DOCKER_TLS_VERIFY=
+    
   # Traefik - Reverse Proxy
   traefik:
     image: traefik:v2.5
     container_name: traefik
     command:
-      - "--api.insecure=true" # Enable dashboard (not recommended for production)
-      - "--providers.docker=true" # Enable Docker provider
-      - "--entryPoints.web.address=:80" # Expose HTTP port 80
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entryPoints.web.address=:80"
     ports:
-      - "80:80" # HTTP
-      - "8081:8082" # Traefik dashboard
+      - "8087:80"
+      - "8081:8082"
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock" # Allow Traefik to dynamically detect containers
+      - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - web
 
@@ -39,8 +47,8 @@ services:
       - PORT=4200
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)" # Route traffic via Traefik
-      - "traefik.http.services.frontend.loadbalancer.server.port=4200" # Expose frontend
+      - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=4200"
     networks:
       - web
     depends_on:
@@ -54,7 +62,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"
-      - "traefik.http.services.backend.loadbalancer.server.port=5000" # Expose API
+      - "traefik.http.services.backend.loadbalancer.server.port=5000"
     networks:
       - web
 
@@ -66,9 +74,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: tip_top_game
-    # Uncomment if you want to access MySQL from outside Docker
-    # ports:
-    #   - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
 
@@ -78,10 +83,10 @@ services:
     platform: linux/${TARGETARCH:-amd64}
     container_name: prometheus
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml # Custom config
-      - prometheus_data:/prometheus # Persist Prometheus data
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
     ports:
-      - "9090:9090" # Prometheus UI
+      - "9090:9090"
     networks:
       - web
 
@@ -91,16 +96,16 @@ services:
     platform: linux/${TARGETARCH:-amd64}
     container_name: grafana
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin # Default admin password
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     ports:
-      - "3001:3000" # Avoid conflict with React port 3000
+      - "3001:3000"
     depends_on:
       - prometheus
     restart: unless-stopped
     networks:
       - web
     volumes:
-      - grafana_data:/var/lib/grafana # Persist Grafana settings
+      - grafana_data:/var/lib/grafana
 
   # SonarQube Database - PostgreSQL
   sonarqube_db:
@@ -111,7 +116,7 @@ services:
       POSTGRES_PASSWORD: sonar
       POSTGRES_DB: sonarqube
     volumes:
-      - sonarqube_db_data:/var/lib/postgresql/data # Persist SonarQube DB
+      - sonarqube_db_data:/var/lib/postgresql/data
     networks:
       - web
 
@@ -132,10 +137,11 @@ services:
 
 networks:
   web:
-    driver: bridge # Isolated network for services
+    driver: bridge
 
 volumes:
   db_data:
   sonarqube_db_data:
   grafana_data:
   prometheus_data:
+  jenkins_data:
