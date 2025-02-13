@@ -16,4 +16,5 @@ SonarQube: `http://46.202.168.187:9000`
 Jenkins: `http://46.202.168.187:8080`
 
 ## Commands to start docker-compose locally:
+`docker-compose down`
 `docker-compose up -d --build`
