@@ -18,6 +18,7 @@ services:
     networks:
       - web
     environment:
+      - JAVA_OPTS=-Dhudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION=true
       - DOCKER_HOST=unix:///var/run/docker.sock
       - DOCKER_CERT_PATH=
       - DOCKER_TLS_VERIFY=
@@ -134,6 +135,10 @@ services:
       - "9000:9000"
     networks:
       - web
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
 
 networks:
   web:
@@ -142,6 +147,9 @@ networks:
 volumes:
   db_data:
   sonarqube_db_data:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
   grafana_data:
   prometheus_data:
   jenkins_data:
