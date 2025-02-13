@@ -45,12 +45,14 @@ Frontend:
 
 ## Bonnes pratiques en terme de développement:
 1. Toujours créer une branche par fonctionnalité - voire idéalement par ticket
+
 2. Le nom de la branche doit être structurée comme suit:
     `3T-WGtdxfv5`
 
 Où:
     - 3T: ThéTipTop (TTT -> 3T -> nom du projet);
     - WGtdxfv5: numéro du ticket présent dans l'url: https://trello.com/c/WGtdxfv5/50-readmemd-updates. En mettant l'id du ticket, on retrouvera facilement ce dernier en entrant le lien suivant: https://trello.com/c/WGtdxfv5
+
 3. Les commits doivent suivre les structures suivantes:
     - `3T-WGtdxfv5: [changements faits]`
     - `Fix 3T-WGtdxfv5: [changements faits]`
