@@ -61,6 +61,8 @@ services:
     build:
       context: ./backend
     container_name: tip_top_backend
+    ports:
+    - "5000:5000" # Expose API
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"
