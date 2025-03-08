@@ -1,25 +1,18 @@
-const dotenv = require('dotenv');
-dotenv.config();
+const express = require('express');
 
-const branch = process.env.BRANCH || 'prod'; // Default to production
+const connectDB = require('./src/config/db'); // Connexion DB
+const authRoutes = require('./src/routes/authRoute');
+// const userRoutes = require('./src/routes/userRoutes');
 
-const dbConfig = {
-  dev: {
-    user: process.env.DB_USER_DEV,
-    password: process.env.DB_PASS_DEV,
-    database: process.env.DB_NAME_DEV,
-  },
-  preprod: {
-    user: process.env.DB_USER_PREPROD,
-    password: process.env.DB_PASS_PREPROD,
-    database: process.env.DB_NAME_PREPROD,
-  },
-  prod: {
-    user: process.env.DB_USER_PROD,
-    password: process.env.DB_PASS_PROD,
-    database: process.env.DB_NAME_PROD,
-  },
-};
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 
-const selectedDB = dbConfig[branch];
-console.log(`Connecting to ${branch} database:`, selectedDB);
+// Connexion à la base de données
+connectDB();
+
+// Routes
+app.use('/api/v1/auth', authRoutes);
+
+
+module.exports = app;
