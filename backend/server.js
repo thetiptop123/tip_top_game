@@ -1,25 +1,23 @@
-const dotenv = require('dotenv');
-dotenv.config();
+// server.js
 
-const branch = process.env.BRANCH || 'prod'; // Default to production
+require('dotenv').config(); // charge le .env
+const express = require('express');
+const connectDB = require('./db');
 
-const dbConfig = {
-  dev: {
-    user: process.env.DB_USER_DEV,
-    password: process.env.DB_PASS_DEV,
-    database: process.env.DB_NAME_DEV,
-  },
-  preprod: {
-    user: process.env.DB_USER_PREPROD,
-    password: process.env.DB_PASS_PREPROD,
-    database: process.env.DB_NAME_PREPROD,
-  },
-  prod: {
-    user: process.env.DB_USER_PROD,
-    password: process.env.DB_PASS_PROD,
-    database: process.env.DB_NAME_PROD,
-  },
-};
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-const selectedDB = dbConfig[branch];
-console.log(`Connecting to ${branch} database:`, selectedDB);
+// Connexion à la base Mongo
+connectDB();
+
+// Middleware pour parser le JSON
+app.use(express.json());
+
+// Routes
+app.use('/auth', require('./src/routes/auth'));
+app.use('/game', require('./src/routes/tickets'));
+
+// Démarrer le serveur
+app.listen(PORT, () => {
+  console.log(`Backend lancé sur http://localhost:${PORT}`);
+});

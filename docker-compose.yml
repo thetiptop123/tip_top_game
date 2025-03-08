@@ -68,19 +68,36 @@ services:
     networks:
       - web
 
-  # Database - MySQL
-  db:
-    image: mysql:8.0
-    container_name: tip_top_db
+  # Database - MongoDB
+  mongodb:
+    image: mongo:latest
+    container_name: tip_top_mongodb
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: tip_top_game
-    # Uncomment if you want to access MySQL from outside Docker
-    # ports:
-    #   - "3306:3306"
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: tip_top_game
+    ports:
+      - "27017:27017"
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/data/db
+    networks:
+      - web
+
+  # MongoDB Admin Interface (optionnel)
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "8084:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_SERVER: mongodb
+    networks:
+      - web
+
 
   # Prometheus - Monitoring
   prometheus:
