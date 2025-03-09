@@ -1,4 +1,4 @@
 export default function Game() {
-    return <>Game</>;
+    return <>Game12</>;
   }
   
