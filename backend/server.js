@@ -1,6 +1,7 @@
 // server.js
 
 require('dotenv').config(); // charge le .env
+const cors = require('cors');
 const express = require('express');
 const connectDB = require('./src/db');
 
@@ -13,6 +14,8 @@ connectDB();
 
 // Middleware pour parser le JSON
 app.use(express.json());
+
+app.use(cors())
 
 // Routes
 app.use('/auth', require('./src/routes/auth'));
