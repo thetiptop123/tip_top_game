@@ -99,4 +99,22 @@ const loginUserController = async (req, res) => {
     }
 }   
 
-module.exports = { registerUserController, loginUserController };
+
+// logout user controller
+const logoutController = async (req, res) => {
+    try {
+       await res.clearCookie('token');
+        res.status(200).json({
+            success: true,
+            message: 'logout successfully',
+        });
+        
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'error in logout controller',
+            error
+        });
+    }
+}
+module.exports = { registerUserController, loginUserController, logoutController };
