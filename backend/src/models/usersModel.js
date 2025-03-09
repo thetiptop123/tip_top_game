@@ -12,6 +12,14 @@ const userSchema = new mongoose.Schema({
         sparse: true
 
     },
+    googleId: {
+        type: String,
+        default: null,
+    },
+    facebookId: {
+        type: String,
+        default: null,
+    },
     password: {
         type: String,
         required: [true, 'password is required'],
@@ -22,15 +30,17 @@ const userSchema = new mongoose.Schema({
     phone: {
         type: String,
         required: [true, 'phoneNumber is required'],
+        default: "06 06 06 06 06"
     },
     address: {
         type: Array,
+        default: ["Vincennes","Paris"],
     },
     userType: {
         type: String,
         required: [true, 'userType is required'],
         default: 'client',
-        enum: ['admin', 'client', 'vendor', 'driver'],
+        enum: ['admin', 'client', 'vendor'],
     },
     profile: {
         type: String,
@@ -38,7 +48,8 @@ const userSchema = new mongoose.Schema({
     },
     answer: {
         type: String,
-        required: [true, 'Answer is require']
+        required: [true, 'Answer is require'],
+        default: "test"
     }
 
 
