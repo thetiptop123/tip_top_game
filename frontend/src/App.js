@@ -7,21 +7,26 @@ import Rules from "./containers/Rules";
 import Profile from "./containers/Profile";
 import Header from "./containers/Header/index";
 import Footer from "./containers/Footer";
+import GlobalProvider from "./contexts";
+import Prize from "./containers/Prize";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/game" element={<Game />} />
-        <Route path="/rules" element={<Rules />} />
-        <Route path="/profile" element={<Profile />} />
-      </Routes>
-      <Footer />
-    </BrowserRouter>
+    <GlobalProvider>
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/game" element={<Game />} />
+          <Route path="/rules" element={<Rules />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/prize" element={<Prize />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </GlobalProvider>
   );
 }
 

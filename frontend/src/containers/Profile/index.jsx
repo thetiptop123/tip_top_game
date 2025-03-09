@@ -8,19 +8,81 @@ import FacebookLogin from "@greatsumini/react-facebook-login";
 import Input from "../../components/Input";
 import CreateAccountBtn from "../../components/CreateAccountBtn";
 import GoGameButton from "../../components/GameButton";
+import axios from "axios";
+import { ActionsTypes, useGlobal } from "../../contexts";
 
 export default function Profile() {
-  const [internalStep, setInternalStep] = useState(0);
+  const [states, dispatch] = useGlobal();
+  const [internalStep, setInternalStep] = useState(
+    states.email.length > 0 ? 1 : 0
+  );
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isOneOptionSelected, setIsOneOptionSelected] = useState(false);
+  const [isLoginOptionSelected, setIsLoginOptionSelected] = useState(false);
 
   const handleCreateAccount = () => {
     if (name !== "" && lastname !== "" && email !== "" && password !== "") {
-      setInternalStep(1);
+      setInternalStep(0);
     }
+    axios
+      .post("http://46.202.168.187:5000/auth/register", {
+        name,
+        lastname,
+        email,
+        password,
+      })
+      .then((res) => {
+        if (res.data?.token) {
+          setInternalStep(1);
+          dispatch({
+            type: ActionsTypes.UPDATE,
+            props: {
+              firstname: name,
+              lastname,
+              email,
+            },
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "Error =>",
+          error.response ? error.response.data : error.message
+        );
+      });
   };
+
+  const handleSignin = () => {
+    if (name !== "" && lastname !== "" && email !== "" && password !== "") {
+      setInternalStep(0);
+    }
+    axios
+      .post("http://46.202.168.187:5000/auth/login", {
+        email,
+        password,
+      })
+      .then((res) => {
+        if (res.data?.token) {
+          setInternalStep(1);
+          dispatch({
+            type: ActionsTypes.UPDATE,
+            props: {
+              email,
+            },
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "Error =>",
+          error.response ? error.response.data : error.message
+        );
+      });
+  };
+
   return internalStep === 0 ? (
     <div style={{ display: "flex" }}>
       <div
@@ -183,126 +245,233 @@ export default function Profile() {
           height: "100vh",
         }}
       >
-        <div
-          style={{
-            backgroundColor: Colors.lightGreen,
-            width: 531,
-            height: 650,
-            borderRadius: 10,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 20,
-              height: "30%",
-            }}
-          >
-            <GoogleButton
-              label="Connexion avec Google"
+        {!isOneOptionSelected ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
+            <CreateAccountBtn
               onClick={() => {
-                console.log("Google button clicked");
+                setIsOneOptionSelected(true);
+                setIsLoginOptionSelected(true);
               }}
-            />
-            <FacebookLogin
-              appId="1088597931155576"
-              onSuccess={(response) => {
-                console.log("Login Success!", response);
+            >
+              Connexion
+            </CreateAccountBtn>
+            <CreateAccountBtn
+              onClick={() => {
+                setIsOneOptionSelected(true);
+                setIsLoginOptionSelected(false);
               }}
-              onFail={(error) => {
-                console.log("Login Failed!", error);
-              }}
-              onProfileSuccess={(response) => {
-                console.log("Get Profile Success!", response);
-              }}
-              style={{
-                backgroundColor: "#4267b2",
-                color: "#fff",
-                fontSize: "16px",
-                padding: "12px 24px",
-                border: "none",
-                borderRadius: "4px",
-              }}
-            />
+            >
+              Inscription
+            </CreateAccountBtn>
           </div>
+        ) : isLoginOptionSelected ? (
           <div
             style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: 700,
-              height: "10%",
-            }}
-          >
-            OU
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-around",
-              alignItems: "center",
-              height: "50%",
+              backgroundColor: Colors.lightGreen,
+              width: 531,
+              height: 650,
+              borderRadius: 10,
             }}
           >
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "space-around",
+                justifyContent: "center",
                 alignItems: "center",
                 gap: 20,
+                height: "30%",
+              }}
+            >
+              <GoogleButton
+                label="Connexion avec Google"
+                onClick={() => {
+                  console.log("Google button clicked");
+                }}
+              />
+              <FacebookLogin
+                appId="1088597931155576"
+                onSuccess={(response) => {
+                  console.log("Login Success!", response);
+                }}
+                onFail={(error) => {
+                  console.log("Login Failed!", error);
+                }}
+                onProfileSuccess={(response) => {
+                  console.log("Get Profile Success!", response);
+                }}
+                style={{
+                  backgroundColor: "#4267b2",
+                  color: "#fff",
+                  fontSize: "16px",
+                  padding: "12px 24px",
+                  border: "none",
+                  borderRadius: "4px",
+                }}
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-around",
+                alignItems: "center",
+                height: "50%",
               }}
             >
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "space-between",
-                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                  gap: 20,
                 }}
               >
                 <Input
-                  width={219}
+                  width={473}
                   height={56}
-                  onChange={(e) => setName(e.target.value)}
-                  value={name}
-                  placeholder="Nom..."
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                  placeholder="Adresse mail..."
                 />
                 <Input
-                  width={219}
+                  width={473}
                   height={56}
-                  onChange={(e) => setLastname(e.target.value)}
-                  value={lastname}
-                  placeholder="Prénom..."
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                  placeholder="Mot de passe..."
                 />
               </div>
-              <Input
-                width={473}
-                height={56}
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-                placeholder="Adresse mail..."
-              />
-              <Input
-                width={473}
-                height={56}
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-                placeholder="Mot de passe..."
-              />
-            </div>
-            <div>
-              <CreateAccountBtn onClick={() => handleCreateAccount()}>
-                Créer un compte
-              </CreateAccountBtn>
+              <div>
+                <CreateAccountBtn onClick={() => handleSignin()}>
+                  Connexion
+                </CreateAccountBtn>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div
+            style={{
+              backgroundColor: Colors.lightGreen,
+              width: 531,
+              height: 650,
+              borderRadius: 10,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 20,
+                height: "30%",
+              }}
+            >
+              <GoogleButton
+                label="Connexion avec Google"
+                onClick={() => {
+                  console.log("Google button clicked");
+                }}
+              />
+              <FacebookLogin
+                appId="1088597931155576"
+                onSuccess={(response) => {
+                  console.log("Login Success!", response);
+                }}
+                onFail={(error) => {
+                  console.log("Login Failed!", error);
+                }}
+                onProfileSuccess={(response) => {
+                  console.log("Get Profile Success!", response);
+                }}
+                style={{
+                  backgroundColor: "#4267b2",
+                  color: "#fff",
+                  fontSize: "16px",
+                  padding: "12px 24px",
+                  border: "none",
+                  borderRadius: "4px",
+                }}
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: 700,
+                height: "10%",
+              }}
+            >
+              OU
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-around",
+                alignItems: "center",
+                height: "50%",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                  gap: 20,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <Input
+                    width={219}
+                    height={56}
+                    onChange={(e) => setName(e.target.value)}
+                    value={name}
+                    placeholder="Nom..."
+                  />
+                  <Input
+                    width={219}
+                    height={56}
+                    onChange={(e) => setLastname(e.target.value)}
+                    value={lastname}
+                    placeholder="Prénom..."
+                  />
+                </div>
+                <Input
+                  width={473}
+                  height={56}
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                  placeholder="Adresse mail..."
+                />
+                <Input
+                  width={473}
+                  height={56}
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                  placeholder="Mot de passe..."
+                />
+              </div>
+              <div>
+                <CreateAccountBtn onClick={() => handleCreateAccount()}>
+                  Créer un compte
+                </CreateAccountBtn>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   ) : (
@@ -350,12 +519,12 @@ export default function Profile() {
           <div
             style={{ fontSize: 48, fontWeight: 800, color: Colors.darkGreen }}
           >
-            {name} {lastname}
+            {states.firstname} {states.lastname}
           </div>
           <div
             style={{ fontSize: 20, fontWeight: 800, color: Colors.darkGreen }}
           >
-            {email}
+            {states.email}
           </div>
 
           <div
@@ -391,7 +560,7 @@ export default function Profile() {
             fontSize: 18,
           }}
         >
-          <p style={{width: 825, height: 75}}>
+          <p style={{ width: 825, height: 75 }}>
             The Tip Top vous propose un jeu-concours pour vous fediliser et
             répondre à vos eventuels besoin, et vous faire découvrire ses
             différentes gammes de thé de très grande qualité, elle est parmi les
