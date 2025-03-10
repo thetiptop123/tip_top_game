@@ -11,7 +11,7 @@ const mongoose = require('mongoose');
 const Ticket = require('./models/Ticket');
 
 // Connexion à MongoDB (adapter l'URI si besoin)
-mongoose.connect('mongodb://root:password@localhost:27017/thetiptop?authSource=admin', {
+mongoose.connect('mongodb://root:password@tip_top_mongodb:27017/tip_top_game?authSource=admin', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
