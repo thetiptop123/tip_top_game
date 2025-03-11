@@ -25,7 +25,7 @@ export default function Header() {
         }}
       >
         <Item onClick={() => navigate("/")}>
-          <img src="/logo.png" width={39} height={41} />
+          <img src="/logo.png" width={39} height={41} alt="logo"/>
         </Item>
       </div>
       <div
@@ -61,7 +61,7 @@ export default function Header() {
             }}
             onClick={() => navigate("/game")}
           >
-            Jeu
+            Espace de Jeu
           </button>
         </Item>
         <Item>
@@ -92,7 +92,20 @@ export default function Header() {
             Contact
           </button>
         </Item>
-        <Item>Thé Tip Top</Item>
+        <Item>
+          <button
+            style={{
+              background: "inherit",
+              border: "none",
+              color: Colors.white,
+              cursor: "pointer",
+              fontSize: 16,
+            }}
+            onClick={() => navigate("/login")}
+          >
+            Connexion
+          </button>
+        </Item>
       </div>
     </div>
   );
