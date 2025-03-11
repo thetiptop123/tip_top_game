@@ -24,7 +24,7 @@ export default function Header() {
           cursor: "pointer",
         }}
       >
-        <Item onClick={() => navigate("/")}>
+        <Item onClick={() => navigate("/home")}>
           <img src="/logo.png" width={39} height={41} />
         </Item>
       </div>
@@ -61,7 +61,7 @@ export default function Header() {
             }}
             onClick={() => navigate("/game")}
           >
-            Jeu
+            Espace de Jeu
           </button>
         </Item>
         <Item>
@@ -92,7 +92,34 @@ export default function Header() {
             Contact
           </button>
         </Item>
-        <Item>Thé Tip Top</Item>
+        <Item>
+          <button
+            style={{
+              background: "inherit",
+              border: "none",
+              color: Colors.white,
+              cursor: "pointer",
+              fontSize: 16,
+            }}
+            onClick={() => navigate("/login")}
+          >
+            Connexion
+          </button>
+        </Item>
+        <Item>
+        <button
+            style={{
+              background: "inherit",
+              border: "none",
+              color: Colors.white,
+              cursor: "pointer",
+              fontSize: 16,
+            }}
+            onClick={() => navigate("/profil")}
+          >
+            Mon Profil
+          </button>
+        </Item>
       </div>
     </div>
   );
