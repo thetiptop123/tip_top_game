@@ -1,7 +1,8 @@
+import React from 'react';
 import { useGlobal } from "../../contexts";
 
 export default function Prize() {
-    const [states,_]=useGlobal();
+    const [states]=useGlobal();
     return <div       style={{
         display: "flex",
         flexDirection: "column",

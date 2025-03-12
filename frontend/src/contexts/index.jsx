@@ -1,4 +1,4 @@
-import { useContext, useReducer, createContext } from 'react';
+import React, { useContext, useReducer, createContext } from 'react';
 
 
 export const ActionsTypes = {
