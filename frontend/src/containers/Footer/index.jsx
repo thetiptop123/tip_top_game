@@ -54,7 +54,7 @@ export default function Footer() {
           <p>Abonnez-vous pour recevoir nos offres exclusives :</p>
           <form style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             <input type="email" placeholder="Votre adresse email" required style={{ padding: '10px', marginBottom: '10px', width: '100%' }} />
-            <button type="submit" style={{ padding: '10px 20px', backgroundColor: '#000', color: '#fff', width: '100%' }}>S'abonner à la Newsletter</button>
+            <button type="submit" style={{ padding: '10px 20px', backgroundColor: '#000', color: '#fff', width: '100%' }}>S&apos;abonner à la Newsletter</button>
           </form>
         </div>
 
