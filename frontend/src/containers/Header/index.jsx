@@ -24,8 +24,8 @@ export default function Header() {
           cursor: "pointer",
         }}
       >
-        <Item onClick={() => navigate("/home")}>
-          <img src="/logo.png" width={39} height={41} />
+        <Item onClick={() => navigate("/")}>
+          <img src="/logo.png" width={39} height={41} alt="logo"/>
         </Item>
       </div>
       <div
@@ -104,20 +104,6 @@ export default function Header() {
             onClick={() => navigate("/login")}
           >
             Connexion
-          </button>
-        </Item>
-        <Item>
-        <button
-            style={{
-              background: "inherit",
-              border: "none",
-              color: Colors.white,
-              cursor: "pointer",
-              fontSize: 16,
-            }}
-            onClick={() => navigate("/profil")}
-          >
-            Mon Profil
           </button>
         </Item>
       </div>
