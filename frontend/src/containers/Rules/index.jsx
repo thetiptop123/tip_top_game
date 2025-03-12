@@ -1,3 +1,4 @@
+import React from 'react';
 import Colors from "../../utils/constants/colors";
 
 export default function Rules() {

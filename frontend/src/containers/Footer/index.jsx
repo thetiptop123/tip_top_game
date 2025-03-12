@@ -1,3 +1,4 @@
+import React from 'react';
 import Item from "../../components/Item";
 import Colors from "../../utils/constants/colors";
 
