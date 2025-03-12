@@ -10,6 +10,7 @@ import Header from "./containers/Header/index";
 import Footer from "./containers/Footer";
 import GlobalProvider from "./contexts";
 import Prize from "./containers/Prize";
+import Legalites from "./containers/Legalites";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/rules" element={<Rules />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/prize" element={<Prize />} />
+          <Route path="/legalites" element={<Legalites />} />
         </Routes>
         <Footer />
       </BrowserRouter>
