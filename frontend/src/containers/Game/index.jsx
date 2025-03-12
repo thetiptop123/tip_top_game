@@ -1,7 +1,7 @@
 import axios from "axios";
 import Input from "../../components/Input";
 import Colors from "../../utils/constants/colors";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ActionsTypes, useGlobal } from "../../contexts";
 import CreateAccountBtn from "../../components/CreateAccountBtn";
 import { useNavigate } from "react-router-dom";
