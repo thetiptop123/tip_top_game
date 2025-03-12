@@ -1,3 +1,4 @@
+import React from "react";
 import { StyledInput } from "./style";
 
 const Input = ({ height, width, size, placeholder, onChange, value }) => {

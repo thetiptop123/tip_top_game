@@ -18,6 +18,7 @@ router.post('/register', async (req, res) => {
         const token = jwt.sign({ id: participant._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ token });
     } catch (error) {
+        console.error(error);
         res.status(400).json({ message: "Email déjà utilisé" });
     }
 });
