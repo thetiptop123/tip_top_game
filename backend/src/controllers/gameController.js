@@ -1,5 +1,4 @@
 const Gain = require('../models/gainsModel');
-const User = require('../models/usersModel'); // Importer le modèle Gain
 const Ticket = require('../models/winningTicket'); // Importer le modèle de ticket pour vérifier si le ticket est gagnant
 // const bcrypt = require('bcrypt')
 // const jwt = require('jsonwebtoken')
@@ -9,7 +8,6 @@ const Ticket = require('../models/winningTicket'); // Importer le modèle de tic
 const recordGameController = async (req, res) => {
   try {
     // get user id from token
-    const { user } = req.user;
     const { ticketNumber } = req.body;
     // check if all fields are provided
     if(!ticketNumber) {

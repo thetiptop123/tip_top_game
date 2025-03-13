@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
         validate: {
             validator: function (value) {
                 // Vérifie que l'email respecte le format standard (exemple simplifié)
-                return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value);
+                return /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value);
             },
             message: props => `${props.value} is not a valid email address.`
         }
@@ -36,14 +36,14 @@ const userSchema = new mongoose.Schema({
         // On ne contrôle pas la longueur ici puisque la valeur sera hashée
         validate: {
             validator: function(value) {
-                // Ici vous pouvez valider le mot de passe en clair avant le hashage
-                // Par exemple : au moins 8 caractères, au moins une majuscule, une minuscule et un chiffre
+                // Valide le mot de passe en clair avant le hashage :
+                // - Au moins 8 caractères
+                // - Au moins une majuscule, une minuscule et un chiffre
                 return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(value);
             },
-            message: props => `Password must be at least 8 characters long and include uppercase, lowercase letters and a digit.`
+            message: () => `Password must be at least 8 characters long and include uppercase, lowercase letters and a digit.`
         }
-    }
-    ,
+    },
 
     phone: {
         type: String,
@@ -69,8 +69,6 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Answer is require'],
         default: "test"
     }
-
-
 }, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);

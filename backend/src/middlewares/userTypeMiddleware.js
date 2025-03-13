@@ -1,4 +1,3 @@
-const { authMiddleware } = require("./authMiddleware");
 
 const userTypeMiddleware = (...allowedUserTypes) => {
     return (req, res, next) => {

@@ -1,25 +1,23 @@
-// src/routes.js
-const React = require('react');
-const { Route } = require('react-router-dom');
-const Home = require('./containers/Home').default;
-const About = require('./containers/About').default;
-const Contact = require('./containers/Contact').default;
-const Game = require('./containers/Game').default;
-const Rules = require('./containers/Rules').default;
-const Profile = require('./containers/Profile').default;
-const Prize = require('./containers/Prize').default;
-const Legalites = require('./containers/Legalites').default;
+import React from 'react';
+import { Route } from 'react-router-dom';
+import Home from './containers/Home';
+import About from './containers/About';
+import Contact from './containers/Contact';
+import Game from './containers/Game';
+import Rules from './containers/Rules';
+import Profile from './containers/Profile';
+import Prize from './containers/Prize';
+import Legalites from './containers/Legalites';
 
 const routes = [
-  <Route path="/" element={<Home />} />,
-  <Route path="/about" element={<About />} />,
-  <Route path="/contact" element={<Contact />} />,
-  <Route path="/game" element={<Game />} />,
-  <Route path="/rules" element={<Rules />} />,
-  <Route path="/profile" element={<Profile />} />,
-  <Route path="/prize" element={<Prize />} />,
-  <Route path="/legalites" element={<Legalites />} />,
+  <Route key="/" path="/" element={<Home />} />,
+  <Route key="/about" path="/about" element={<About />} />,
+  <Route key="/contact" path="/contact" element={<Contact />} />,
+  <Route key="/game" path="/game" element={<Game />} />,
+  <Route key="/rules" path="/rules" element={<Rules />} />,
+  <Route key="/profile" path="/profile" element={<Profile />} />,
+  <Route key="/prize" path="/prize" element={<Prize />} />,
+  <Route key="/legalites" path="/legalites" element={<Legalites />} />,
 ];
 
-module.exports = routes;
-
+export default routes;
