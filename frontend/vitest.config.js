@@ -1,22 +1,28 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
 import { resolve } from "path";
+import reactRefresh from "vite-plugin-react-refresh";
+import { Buffer } from "buffer";
+import crypto from "crypto-browserify";
 
 export default defineConfig({
-  plugins: [react()],
-  test: {
-    environment: "jsdom", // Make sure this is present to simulate the browser environment
-    globals: true,
-    setupFiles: "./src/setupTests.js", // Optional: if you have setup files for your tests
-    coverage: {
-      provider: "v8",
-      reporter: ["text", "lcov", "html"],
-      reportsDirectory: "./coverage",
-    },
-  },
   resolve: {
     alias: {
-      "@": resolve(__dirname, "./src"), // If you use absolute imports
+      "@": resolve(__dirname, "src"),
+      buffer: "buffer",
+      crypto: "crypto-browserify"
     },
+  },
+  define: {
+    'process.env': {},
+    global: 'globalThis',
+  },
+  plugins: [reactRefresh()],
+  test: {
+    environment: 'happy-dom',
+    globals: true,
+    setupFiles: './src/setupTests.js',
+  },
+  server: {
+    port: 4200,
   },
 });
