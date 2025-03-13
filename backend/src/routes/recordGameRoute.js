@@ -6,7 +6,7 @@ const { recordGameController } = require("../controllers/gameController");
 
 
 //register user
-router.post('/playGame', authMiddleware,userTypeMiddleware("client"), recordGameController);
+router.post('/jeux', authMiddleware,userTypeMiddleware("client"), recordGameController);
 
 
 
