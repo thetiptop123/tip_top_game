@@ -1,6 +1,7 @@
 const userModel = require("../models/usersModel");
 const gainModel = require("../models/gainsModel");
 const bcrypt = require('bcrypt')
+const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken')
 
 //const { authMiddleware } = require("../middlewares/authMiddleware");
@@ -476,8 +477,78 @@ const logoutUserController = async (req, res) => {
     }
 };
 
-
-
+const forgotPasswordController = async (req, res) => {
+    try {
+      const { email } = req.body;
+  
+      // Vérifier que l'email est fourni
+      if (!email) {
+        return res.status(400).json({
+          success: false,
+          message: "L'email est requis."
+        });
+      }
+  
+      // Rechercher l'utilisateur par email
+      const user = await userModel.findOne({ email });
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "Utilisateur non trouvé."
+        });
+      }
+  
+      // Générer un token de réinitialisation valable 1 heure
+      const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  
+      // Optionnel : Sauvegarder le token et sa date d'expiration dans la base
+      // user.resetPasswordToken = resetToken;
+      // user.resetPasswordExpires = Date.now() + 3600000; // 1 heure en ms
+      // await user.save();
+  
+      // Créer le transporteur pour envoyer l'email avec les informations de votre fichier .env
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,  // Ex: mouaadsellak123@gmail.com
+          pass: process.env.EMAIL_PASS   // Ex: "dxsf fanh vliv cmbw"
+        }
+      });
+  
+      // Construire l'URL de réinitialisation
+      // process.env.CLIENT_URL peut être défini dans votre .env pour pointer vers votre front-end
+      const resetUrl = `${process.env.CLIENT_URL || 'http://46.202.168.187:5000'}/resetpassword/${resetToken}`;
+  
+      // Configuration de l'email à envoyer
+      const mailOptions = {
+        from: `Support <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'Réinitialisation de votre mot de passe',
+        html: `
+          <p>Vous avez demandé à réinitialiser votre mot de passe.</p>
+          <p>Cliquez sur le lien suivant pour réinitialiser votre mot de passe (valable 1 heure) :</p>
+          <p><a href="${resetUrl}">${resetUrl}</a></p>
+          <p>Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.</p>
+        `
+      };
+  
+      // Envoi de l'email
+      await transporter.sendMail(mailOptions);
+  
+      res.status(200).json({
+        success: true,
+        message: 'Un email de réinitialisation a été envoyé.'
+      });
+    } catch (error) {
+      console.error("Erreur dans forgotPasswordController:", error);
+      res.status(500).json({
+        success: false,
+        message: "Erreur interne du serveur.",
+        error: error.message
+      });
+    }
+  };
+  
 
 
 
@@ -492,4 +563,5 @@ module.exports = {
     seeMyGainsController,
     updateUserController,
     logoutUserController,
+    forgotPasswordController,
 };     
