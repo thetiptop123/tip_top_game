@@ -5,18 +5,15 @@
 
 SHELL := /bin/bash
 
-# Cible principale : lance les services en mode dev (build + up)
 up:
 	docker compose up --build -d
 
-# Arrêter les services (sans les supprimer)
-stop:
-	docker compose stop
-
-# Supprimer les services et les réseaux associés
-clean:
-	docker compose downÒ
-
-# Consulter les logs en direct
+front:
+	docker compose up --build frontend
+db:
+	docker compose up  --build mongodb
+back:
+	docker compose up  --build backend
+	   
 logs:
 	docker compose logs -f
