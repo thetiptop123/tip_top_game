@@ -19,7 +19,9 @@ app.use(express.json());
 
 app.use(cors())
 
-
+app.get('/api/hello', (req, res) => {
+  res.status(200).json({ message: 'Hello, World!' });
+});
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
