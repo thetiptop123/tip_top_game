@@ -11,6 +11,7 @@ const {
      getAllEmployersController,
      updateUserController,
      logoutUserController,
+     forgotPasswordController, 
     } = require("../controllers/userController"); 
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const { userTypeMiddleware } = require("../middlewares/userTypeMiddleware");
@@ -40,7 +41,7 @@ router.put('/updateuser/:id', authMiddleware, userTypeMiddleware("admin","employ
 //logout user
 router.post('/logoutuser/:id', authMiddleware,userTypeMiddleware("admin","employer"), logoutUserController);
 
-
+router.post('/forgotpassword', forgotPasswordController);
 
 
 module.exports = router;
