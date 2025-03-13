@@ -3,7 +3,7 @@ require('@babel/register')({
   presets: ['@babel/preset-env', '@babel/preset-react'], // Enable Babel to process JSX and ES6 code
 });
 
-const Sitemap = require('react-router-sitemap').default;
+const Sitemap = require('react-sitemap-generator').default;
 const router = require('./src/routes');  // import your router file
 const path = require('path');
 
