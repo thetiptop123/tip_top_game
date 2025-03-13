@@ -1,4 +1,5 @@
 const userModel = require("../models/usersModel");
+const gainModel = require("../models/gainsModel");
 const bcrypt = require('bcrypt')
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken')
@@ -93,6 +94,33 @@ const updateProfileController = async (req, res) => {
         });
     }
 };
+
+
+const seeMyGainsController = async (req, res) => {
+    try {
+        const user = req.user;
+        const gains = await gainModel.find({ userId: user._id });
+        if (gains.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'No gains found',
+            });
+        }
+        res.status(200).json({  
+            success: true,
+            message: 'Gains fetched successfully',
+            gains,
+            nombreGains: gains.length
+        });
+    } catch (error) {
+        res.status(500).json({  
+            success: false,
+            message: 'Internal server error',
+            error: error.message
+        });
+    }
+};
+
 
 
 const resetPasswordController = async (req, res) => {
@@ -532,6 +560,7 @@ module.exports = {
     getAllUsersController,
     getAllEmployersController,
     getAllClientsController,
+    seeMyGainsController,
     updateUserController,
     logoutUserController,
     forgotPasswordController,
