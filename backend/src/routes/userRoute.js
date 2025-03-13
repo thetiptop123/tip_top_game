@@ -11,6 +11,7 @@ const {
      getAllEmployersController,
      updateUserController,
      logoutUserController,
+     seeMyGainsController,
     } = require("../controllers/userController"); 
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const { userTypeMiddleware } = require("../middlewares/userTypeMiddleware");
@@ -23,6 +24,9 @@ router.put('/updateprofile', authMiddleware, updateProfileController);    // upd
 
 //Reset password 
 router.post('/resetpassword', authMiddleware, resetPasswordController);
+
+//see my gains
+router.get('/mygains', authMiddleware, userTypeMiddleware("client"), seeMyGainsController);
 
 // password update
 router.put('/updatepassword', authMiddleware, updatePasswordController);
