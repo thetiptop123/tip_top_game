@@ -30,9 +30,15 @@ app.use('/recordGame', recordGameRoutes);
 app.use('/contact', contactRoutes);
 
 // Démarrer le serveur
-app.listen(PORT, () => {
-  console.log(`Backend lancé sur http://localhost:${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Backend lancé sur http://localhost:${PORT}`);
+// });
+
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Backend lancé sur http://localhost:${PORT}`);
+  });
+}
 
 
 
