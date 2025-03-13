@@ -1,39 +1,24 @@
-.footerContainer {
-  @apply flex h-[95px] w-full;
+.body {
+  @apply flex justify-around bg-[#39590A] p-5;
 }
-
-.footer-left {
-  @apply flex justify-start gap-5 w-1/3;
+.container {
+  @apply text-left text-white;
 }
-
-.footer-center {
-  @apply flex justify-center w-2/5 text-center;
+.subFooter {
+  @apply text-center bg-[#e0e0e0] p-2.5 text-black;
 }
-
-.footer-right {
-  @apply flex flex-col justify-around w-1/3 items-end pr-8;
+.input {
+  @apply p-2.5 mb-2.5 w-full;
 }
-
-/* Breakpoints */
-@media (min-width: 1280px) {
-  .footerContainer {
-    @apply px-10;
-  }
+.btn {
+  @apply py-2.5 px-5 bg-black text-white w-full;
 }
-
-@media (min-width: 769px) and (max-width: 1279px) {
-  .footerContainer {
-    @apply px-6;
-  }
+.title {
+  @apply text-[#85db18];
 }
-
-@media (max-width: 768px) {
-  .footerContainer {
-    @apply flex-col items-center;
-  }
-  .footer-left,
-  .footer-center,
-  .footer-right {
-    @apply w-full text-center py-2;
-  }
+.text1 {
+  @apply text-[#ffdb4f] no-underline;
+}
+.text2 {
+  @apply text-[#ffffff] no-underline;
 }
