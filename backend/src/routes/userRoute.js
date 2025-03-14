@@ -13,6 +13,7 @@ const {
      logoutUserController,
      forgotPasswordController, 
      seeMyGainsController,
+     getAllUsersGainsController,
     } = require("../controllers/userController"); 
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const { userTypeMiddleware } = require("../middlewares/userTypeMiddleware");
@@ -42,10 +43,16 @@ router.get('/allemployers', authMiddleware, userTypeMiddleware("admin"), getAllE
 router.put('/updateuser/:id', authMiddleware, userTypeMiddleware("admin","employer"), updateUserController);
 
 
+
+//get all users gains
+router.get('/usersgains', authMiddleware, userTypeMiddleware("admin","employer"), getAllUsersGainsController);
+
+
 //logout user
 router.post('/logoutuser/:id', authMiddleware,userTypeMiddleware("admin","employer"), logoutUserController);
 
 router.post('/forgotpassword', forgotPasswordController);
+
 
 
 module.exports = router;
