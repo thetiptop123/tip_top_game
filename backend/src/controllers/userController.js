@@ -548,6 +548,49 @@ const forgotPasswordController = async (req, res) => {
       });
     }
   };
+
+  const getAllUsersGainsController = async (req, res) => {
+    try {
+      const userEmail = req.body.email;
+      if (userEmail) {
+        const user = await userModel.findOne({ email: userEmail });
+        if (!user) {
+          return res.status(404).json({
+            success: false,
+            message: 'this user does not exist',
+          });
+        }
+        const gains = await gainModel.find({ userId: user._id });
+        if (gains.length === 0) {
+          return res.status(404).json({
+            success: false,
+            message: 'this user has no gains',
+          });   
+        }
+        return res.status(200).json({
+          success: true,
+          message: 'Gains fetched successfully.',
+          gains,
+          nombreGains: gains.length,
+          totalGains: gains.reduce((acc, gain) => acc + gain.prizeValue + " euros", 0)
+        });
+      }
+      const gains = await gainModel.find();
+      return res.status(200).json({
+        success: true,
+        message: 'Gains fetched successfully.',
+        gains,
+        nombreGains: gains.length,
+        totalGains: gains.reduce((acc, gain) => acc + gain.prizeValue + " euros", 0)
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Error fetching gains.',
+        error: error.message
+      });
+    }
+  };
   
 
 
@@ -564,4 +607,5 @@ module.exports = {
     updateUserController,
     logoutUserController,
     forgotPasswordController,
+    getAllUsersGainsController,
 };     
