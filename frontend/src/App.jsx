@@ -11,6 +11,8 @@ import Footer from "./containers/Footer";
 import GlobalProvider from "./contexts";
 import Prize from "./containers/Prize";
 import Legalites from "./containers/Legalites";
+import SignUp from './containers/SignUp';
+import Login from './containers/Login';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/prize" element={<Prize />} />
           <Route path="/legalites" element={<Legalites />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
         <Footer />
       </BrowserRouter>
