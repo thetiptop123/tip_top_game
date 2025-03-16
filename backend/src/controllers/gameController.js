@@ -1,14 +1,43 @@
 const Gain = require('../models/gainsModel');
 const Ticket = require('../models/winningTicket');
-const { sendAdminNotification, sendPlayerNotification } = require('../config/emailService');
+const axios = require('axios');
+const { sendAdminNotification, sendPlayerNotification } = require('../../script/services/emailService');
+
+
 
 
 
 // Enregistrer le gain d'un utilisateur
 const recordGameController = async (req, res) => {
   try {
+
     // get user id from token
     const user = req.user;
+
+    let date;
+    try {
+      const response = await axios.get("http://worldclockapi.com/api/json/utc/now");
+      date = new Date(response.data.currentDateTime);
+
+    } catch (error) {
+      console.error(" Erreur lors de la récupération de la date :", error.message);
+      return res.status(500).json({
+        success: false,
+        message: "Impossible de récupérer la date réelle. Réessayez plus tard.",
+      });
+    }
+
+    // Définition de la période valide du jeu
+    const validFrom = new Date('2025-03-01T00:00:00Z');
+    const validUntil = new Date('2025-04-30T23:59:59Z');
+
+    if (date < validFrom || date > validUntil) {
+      return res.status(400).json({
+        success: false,
+        message: 'Game is not available.',
+      });
+    }
+
     const { ticketNumber } = req.body;
     // check if all fields are provided
     if (!ticketNumber) {
@@ -26,7 +55,7 @@ const recordGameController = async (req, res) => {
         message: 'Ticket is invalid or already used.',
       });
     }
-  
+
     // Enregistrer le gain
     const newGain = new Gain({
       userId: req.user._id,
@@ -44,9 +73,9 @@ const recordGameController = async (req, res) => {
 
 
     // Formater la date actuelle
-    const date = new Date().toLocaleString();
 
-   
+
+
     // Configuration de l'email pour le participant
     await sendPlayerNotification({ userName: user.userName, email: user.email, date, prizeWon: ticket.prizeWon, prizeValue: ticket.prizeValue });
     // Configuration de l'email pour l'administrateur
