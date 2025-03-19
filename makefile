@@ -9,11 +9,11 @@ up:
 	docker compose up --build -d
 
 front:
-	docker compose up --build frontend
+	docker compose up --build -d frontend
 db:
-	docker compose up  --build mongodb
+	docker compose up  --build -d mongodb
 back:
-	docker compose up  --build backend
+	docker compose up  --build -d backend
 	   
 logs:
 	docker compose logs -f

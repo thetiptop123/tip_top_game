@@ -21,7 +21,8 @@ export default function Contact() {
 
     try {
       // Appel à l'API backend (adaptation de l'URL selon votre config Docker/Traefik)
-      const response = await fetch('http://46.202.168.187:5000/contact', {
+      const response = await fetch('http://localhost:5000/contact', {
+        // const response = await fetch('http://46.202.168.187:5000/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
