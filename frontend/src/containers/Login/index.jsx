@@ -40,6 +40,9 @@ export default function Login() {
             props: {
               email,
               token: res.data?.token,
+              phone: res.data?.user.phone,
+              firstname: res.data?.user.userName.split(' ')[0],
+              lastname: res.data?.user.userName.split(' ')[1],
             },
           });
           navigate("/profile");

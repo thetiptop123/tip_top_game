@@ -49,13 +49,26 @@ export default function Home() {
         </h1>
         <img src="/img_home.png" alt="jeu-concours" className={styles.image} />
         <div className={styles.text}>
-          The Tip Top vous propose un jeu-concours pour vous fidéliser et
-          répondre à vos éventuels besoins, et vous faire découvrir ses
-          différentes gammes de thé de très grande qualité. Elle est parmi les
-          leaders dans le domaine. À vous de tenter votre chance.
+          Chez <strong>Thé Tip Top</strong>, nous célébrons une grande étape :
+          l&apos;ouverture de notre <strong>10ème boutique à Nice</strong> !
+          Pour marquer cet événement et vous faire découvrir nos thés
+          d&apos;exception, nous lançons un{" "}
+          <strong>jeu-concours exclusif</strong>. Découvrez nos mélanges
+          signatures, thés détox, thés blancs, thés légumes, et infusions, tous{" "}
+          <strong>bios et faits main</strong>.
         </div>
         <div className={styles.btnContainer}>
           <GoGameButton goTo="profile">Accéder au jeu</GoGameButton>
+        </div>
+        <div className={styles.text}>
+          Du <strong>1er mars 2025</strong> au <strong>1er avril 2025</strong>,
+          tous les achats supérieurs à <strong>49€</strong>
+          vous donnent droit à un{" "}
+          <strong>code de participation unique de 10 caractères</strong>
+          (lettres et chiffres) imprimé sur votre ticket de caisse ou facture.
+          Vous avez jusqu&apos;à{" "}
+          <strong>30 jours après la fin du jeu-concours</strong> pour tester
+          votre code ici même et découvrir votre lot !
         </div>
         <Lots />
       </div>
