@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Colors from "../../utils/constants/colors";
 
 export default function Rules() {
@@ -73,13 +73,21 @@ export default function Rules() {
           3. Répartitions des gains
         </h2>
         <ul style={{ paddingLeft: 20 }}>
-          <li>&#x2022; 0% des tickets : 1 infuseur à thé.</li>
+          <li>&#x2022; 60% des tickets : 1 infuseur à thé.</li>
           <li>
             &#x2022; 20% des tickets : 1 boîte de 100g de thé détox ou infusion.
           </li>
           <li>&#x2022; 10% des tickets : 1 boîte de 100g de thé signature.</li>
           <li>&#x2022; 6% des tickets : 1 coffret découverte (valeur 39€).</li>
           <li>&#x2022; 4% des tickets : 1 coffret découverte (valeur 69€).</li>
+          <li>
+            &#x2022; Et ce n'est pas tout ! Un tirage au sort final sera organisé
+            pour déterminer le gagnant d&apos;un an de thé d&apos;une valeur de
+            360€. <br /> Rappel : Le nombre de participations d&apos;un même
+            client n&apos;augmente pas ses chances de gagner ce gros lot. <br />
+            Ce tirage au sort sera effectué sous le contrôle de Maître Arnaud
+            Rick, huissier de justice.
+          </li>
         </ul>
       </div>
       <div style={{ paddingTop: 20, paddingBottom: 20 }}>

@@ -13,6 +13,7 @@ import Prize from "./containers/Prize";
 import Legalites from "./containers/Legalites";
 import SignUp from './containers/SignUp';
 import Login from './containers/Login';
+import Edit from './containers/Edit';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/legalites" element={<Legalites />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/edit" element={<Edit />} />
         </Routes>
         <Footer />
       </BrowserRouter>
