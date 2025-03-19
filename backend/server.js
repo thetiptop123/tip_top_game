@@ -6,7 +6,7 @@ const express = require('express');
 const connectDB = require('./src/db');
 const authRoutes = require('./src/routes/authRoute');
 const userRoutes = require('./src/routes/userRoute'); 
-const recordGameRoutes = require('./src/routes/recordGameRoute');
+const gameRoutes = require('./src/routes/gameRoute');
 const contactRoutes = require('./src/routes/contactRoute');
 
 const app = express();
@@ -26,7 +26,7 @@ app.get('/api/hello', (req, res) => {
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
-app.use('/recordGame', recordGameRoutes);
+app.use('/game', gameRoutes);
 app.use('/contact', contactRoutes);
 
 // Démarrer le serveur

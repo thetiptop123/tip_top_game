@@ -6,10 +6,10 @@ const { recordGameController , grandTirageController} = require("../controllers/
 
 
 //register user
-router.post('/jeux', authMiddleware,userTypeMiddleware("client"), recordGameController);
+router.post('/play', authMiddleware,userTypeMiddleware("client"), recordGameController);
 
 // grand tirage
-router.post('/grandJeu', authMiddleware,userTypeMiddleware("admin"), grandTirageController);
+router.post('/big-game', authMiddleware,userTypeMiddleware("admin"), grandTirageController);
 
 
 
