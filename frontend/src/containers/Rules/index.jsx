@@ -34,7 +34,7 @@ export default function Rules() {
             France métropolitaine.
           </li>
           <li>
-            &#x2022; Pour participer, il faut effectuer un achat minimum de 49€
+            &#x2022; Pour participer: il faut effectuer un achat minimum de 49€
             dans une boutique Thé Tip Top.
           </li>
           <li>
