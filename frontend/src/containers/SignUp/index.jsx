@@ -36,7 +36,7 @@ export default function SignUp() {
       setInternalStep(0);
     }
     axios
-      .post("http://46.202.168.187:5000/auth/register", {
+      .post("http://localhost:5000/auth/register", {
         userName: name + " " + lastname,
         lastname,
         email,

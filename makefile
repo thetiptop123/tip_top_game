@@ -1,7 +1,6 @@
 # Makefile
 # -----------
 # Ce Makefile fournit des commandes pour gérer vos services via Docker Compose.
-# Utilisez "make dev" pour lancer tous vos services avec un build préalable.
 
 SHELL := /bin/bash
 
