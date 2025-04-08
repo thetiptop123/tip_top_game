@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { ActionsTypes, useGlobal } from "../../contexts";
 import CreateAccountBtn from "../../components/CreateAccountBtn";
 import { useNavigate } from "react-router-dom";
+import Confetti from "react-confetti";
 
 export default function Game() {
   const [states, dispatch] = useGlobal();
@@ -12,14 +13,23 @@ export default function Game() {
   const [messageSuccess, setMessageSuccess] = useState("");
   const [messageError, setMessageError] = useState("");
   const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const [isCodeValid, setIsCodeValid] = useState(false);
 
   const navigate = useNavigate();
 
   const handleValidate = () => {
     axios
-      .post("http://46.202.168.187:5000/game/use-ticket", {
-        code,
-      })
+      .post(
+        "http://46.202.168.187:5000/recordGame/jeux",
+        {
+          ticketNumber: code,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${states.token}`,
+          },
+        }
+      )
       .then((res) => {
         setIsButtonClicked(true);
         if (res.data?.ticket) {
@@ -31,6 +41,7 @@ export default function Game() {
               prize: res.data?.message,
             },
           });
+          setIsCodeValid(true);
         }
       })
       .catch((error) => {
@@ -50,40 +61,43 @@ export default function Game() {
   }, [states.email]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        paddingTop: 30,
-        paddingBottom: 30,
-        paddingLeft: 90,
-        paddingRight: 40,
-      }}
-    >
+    <>
+      {isCodeValid && <Confetti width={1400} height={800} recycle={true} />}
       <div
-        style={{ display: "flex", justifyContent: "space-between", gap: 20 }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          paddingTop: 30,
+          paddingBottom: 30,
+          paddingLeft: 90,
+          paddingRight: 40,
+        }}
       >
-        <Input
-          width={219}
-          height={56}
-          onChange={(e) => setCode(e.target.value)}
-          value={code}
-          placeholder="Code..."
-        />
-        <CreateAccountBtn onClick={handleValidate}>Valider</CreateAccountBtn>
-      </div>
-      {isButtonClicked ? (
-        messageSuccess.length > 0 ? (
-          <p style={{ color: Colors.lightGreen }}>{messageSuccess}</p>
+        <div
+          style={{ display: "flex", justifyContent: "space-between", gap: 20 }}
+        >
+          <Input
+            width={219}
+            height={56}
+            onChange={(e) => setCode(e.target.value)}
+            value={code}
+            placeholder="Code..."
+          />
+          <CreateAccountBtn onClick={handleValidate}>Valider</CreateAccountBtn>
+        </div>
+        {isButtonClicked ? (
+          messageSuccess.length > 0 ? (
+            <p style={{ color: Colors.lightGreen }}>{messageSuccess}</p>
+          ) : (
+            <p style={{ color: "red" }}>{messageError}</p>
+          )
         ) : (
-          <p style={{ color: "red" }}>{messageError}</p>
-        )
-      ) : (
-        <></>
-      )}
-    </div>
+          <></>
+        )}
+      </div>
+    </>
   );
 }

@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   # Jenkins
   jenkins:
@@ -11,6 +10,7 @@ services:
       - jenkins_data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock  # Mount Docker socket
       - /usr/bin/docker:/usr/bin/docker  # Mount Docker binary
+      - /var/www:/var/www
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jenkins.rule=Host(`jenkins.localhost`)"
@@ -63,6 +63,11 @@ services:
     container_name: tip_top_backend
     ports:
     - "5000:5000" # Expose API
+    env_file:
+      - ./backend/.env
+    # volumes:
+    # - ./backend:/app
+    # - /app/node_modules
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"

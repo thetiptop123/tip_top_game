@@ -10,6 +10,8 @@ const defaultState = {
     firstname: '',
     lastname: '',
     email: '',
+    phone: '',
+    token: '',
     ticketCode: '',
     prize: '',
 };
