@@ -43,6 +43,7 @@ export default function SignUp() {
         password,
       })
       .then((res) => {
+        console.log("res =>", res.data);
         if (res.data?.token) {
           setInternalStep(1);
           dispatch({
