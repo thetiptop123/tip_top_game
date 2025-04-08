@@ -23,13 +23,13 @@ export BRANCH
 echo "Entering on folder corresponding to $1 branch"
 case "$1" in
         develop)
-                cd tip_top_game
+                cd /var/www/tip_top_game
                 ;;
         preprod)
-                cd tip_top_game_preprod
+                cd /var/www/tip_top_game_preprod
                 ;;
         main)
-                cd tip_top_game_main
+                cd /var/www/tip_top_game_main
                 ;;
         *)
         echo "Error: Invalid branch name '$1'. Allowed values: develop, preprod, main."
