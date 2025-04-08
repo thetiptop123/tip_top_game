@@ -1,109 +1,141 @@
-import React from 'react';
+import React from "react";
 import Item from "../../components/Item";
 import Colors from "../../utils/constants/colors";
 import { useNavigate } from "react-router-dom";
+import styles from "../../styles/Header/Header.module.css";
+import { isMobile } from "react-device-detect";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+
+export function BasicMenu() {
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <Button
+        id="basic-button"
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        <MoreVertIcon />
+      </Button>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem onClick={handleClose}>
+          <Item>
+            <button className={styles.btn} onClick={() => navigate("/rules")}>
+              Règles du jeu
+            </button>
+          </Item>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <Item>
+            <button className={styles.btn} onClick={() => navigate("/game")}>
+              Espace de Jeu
+            </button>
+          </Item>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <Item>
+            <button className={styles.btn} onClick={() => navigate("/profile")}>
+              Espace Client
+            </button>
+          </Item>
+        </MenuItem>
+        <MenuItem>
+          <Item>
+            <button className={styles.btn} onClick={() => navigate("/contact")}>
+              Contact
+            </button>
+          </Item>
+        </MenuItem>
+        <MenuItem>
+          <Item>
+            <button className={styles.btn} onClick={() => navigate("/login")}>
+              Connexion
+            </button>
+          </Item>
+        </MenuItem>
+      </Menu>
+    </div>
+  );
+}
 
 export default function Header() {
   const navigate = useNavigate();
-  return (
+  return isMobile ? (
     <div
+      className={styles.body}
       style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
         backgroundColor: Colors.theTipTop,
-        height: 80,
         color: Colors.gray,
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-start",
-          width: "10%",
-          paddingLeft: 30,
-          cursor: "pointer",
-        }}
-      >
+      <div className={styles.logoContainer}>
         <Item onClick={() => navigate("/")}>
-          <img src="/logo.png" width={39} height={41} alt="logo"/>
+          <img src="/logo.png" width={39} height={41} alt="logo" />
         </Item>
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-around",
-          width: "60%",
-          paddingRight: 100,
-        }}
-      >
+      <div className={styles.btnsContainer}>
+        <BasicMenu />
+      </div>
+    </div>
+  ) : (
+    <div
+      className={styles.body}
+      style={{
+        backgroundColor: Colors.theTipTop,
+        color: Colors.gray,
+      }}
+    >
+      <div className={styles.logoContainer}>
+        <Item onClick={() => navigate("/")}>
+          <img src="/logo.png" width={39} height={41} alt="logo" />
+        </Item>
+      </div>
+      <div className={styles.btnsContainer}>
         <Item>
-          <button
-            style={{
-              background: "inherit",
-              border: "none",
-              color: Colors.white,
-              cursor: "pointer",
-              fontSize: 16,
-            }}
-            onClick={() => navigate("/rules")}
-          >
+          <button className={styles.btn} onClick={() => navigate("/rules")}>
             Règles du jeu
           </button>
         </Item>
         <Item>
-          <button
-            style={{
-              background: "inherit",
-              border: "none",
-              color: Colors.white,
-              cursor: "pointer",
-              fontSize: 16,
-            }}
-            onClick={() => navigate("/game")}
-          >
+          <button className={styles.btn} onClick={() => navigate("/game")}>
             Espace de Jeu
           </button>
         </Item>
         <Item>
-          <button
-            style={{
-              background: "inherit",
-              border: "none",
-              color: Colors.white,
-              cursor: "pointer",
-              fontSize: 16,
-            }}
-            onClick={() => navigate("/profile")}
-          >
+          <button className={styles.btn} onClick={() => navigate("/profile")}>
             Espace Client
           </button>
         </Item>
         <Item>
-          <button
-            style={{
-              background: "inherit",
-              border: "none",
-              color: Colors.white,
-              cursor: "pointer",
-              fontSize: 16,
-            }}
-            onClick={() => navigate("/contact")}
-          >
+          <button className={styles.btn} onClick={() => navigate("/contact")}>
             Contact
           </button>
         </Item>
         <Item>
-          <button
-            style={{
-              background: "inherit",
-              border: "none",
-              color: Colors.white,
-              cursor: "pointer",
-              fontSize: 16,
-            }}
-            onClick={() => navigate("/login")}
-          >
+          <button className={styles.btn} onClick={() => navigate("/login")}>
             Connexion
           </button>
         </Item>
