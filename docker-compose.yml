@@ -1,7 +1,7 @@
 services:
   # Jenkins
   jenkins:
-    image: jenkins/jenkins:lts
+    image: custom-jenkins:latest
     container_name: jenkins
     user: root  # Run as root to have Docker permissions
     ports:
@@ -12,7 +12,6 @@ services:
       - /usr/bin/docker:/usr/bin/docker  # Mount Docker binary
       - /var/www:/var/www
       - /home/tiptop/.ssh:/root/.ssh
-      - /usr/bin/docker-compose:/usr/bin/docker-compose
 
     labels:
       - "traefik.enable=true"
