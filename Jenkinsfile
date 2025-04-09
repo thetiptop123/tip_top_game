@@ -1,19 +1,22 @@
 pipeline {
     agent any
 
+    // Déclaration des variables d'environnement globales
     environment {
         // Répertoires de déploiement sur le VPS pour chaque branche
         DEVELOP_DIR = 'tip_top_game'
         PREPROD_DIR  = 'tip_top_game_preprod'
         MAIN_DIR     = 'tip_top_game_main'
-        // Variables dynamiques, à définir dans le stage Set Environment
+        // Variables pour la version d'environnement et le dossier de déploiement, qui seront définies dynamiquement
         VERSION = ''
         DEPLOY_DIR = ''
     }
 
     stages {
+
         stage('Checkout') {
             steps {
+                // Jenkins effectue un checkout du code source
                 checkout scm
                 echo "Checked out branch: ${env.BRANCH_NAME}"
             }
@@ -22,6 +25,7 @@ pipeline {
         stage('Set Environment') {
             steps {
                 script {
+                    // Selon la branche, nous configurons les variables VERSION et DEPLOY_DIR
                     if (env.BRANCH_NAME == 'develop') {
                         env.VERSION = 'test'
                         env.DEPLOY_DIR = env.DEVELOP_DIR
@@ -32,6 +36,7 @@ pipeline {
                         env.VERSION = 'prod'
                         env.DEPLOY_DIR = env.MAIN_DIR
                     } else {
+                        // Si c'est une branche de feature, on arrête le pipeline
                         echo "Branch ${env.BRANCH_NAME} is a feature branch; skipping deployment."
                         currentBuild.result = 'SUCCESS'
                         error("Not a deployment branch. Exiting pipeline.")
