@@ -12,7 +12,7 @@ services:
       - /usr/bin/docker:/usr/bin/docker  # Mount Docker binary
       - /var/www:/var/www
       - /home/tiptop/.ssh:/root/.ssh
-      - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
+      - /usr/bin/docker-compose:/usr/bin/docker-compose
 
     labels:
       - "traefik.enable=true"
