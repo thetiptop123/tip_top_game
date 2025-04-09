@@ -52,17 +52,12 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Change to the appropriate directory (if your repository structure demands it)
-                    // If your repository already contains all code and the deployment.sh script is at the root,
-                    // you may not need to change directories. If you need different directories per environment,
-                    // then your deployment.sh should handle that too.
-                    //
-                    // Here, we assume that deployment.sh is at the root and works by itself, based on the branch.
-                    //
-                    // Make sure the deployment script is executable.
-                    sh "chmod +x deployment.sh"
-                    // Call the deployment script with the branch name as a parameter.
-                    sh "./deployment.sh ${env.BRANCH_NAME}"
+                    // Utiliser SSH pour se connecter au VPS et exécuter le script de déploiement.
+                    sshagent(['vps-ssh-credential']) {
+                        // Assurez-vous que l'adresse IP ou le DNS du VPS est correct et accessible depuis Jenkins.
+                        sh """
+                           ssh -o StrictHostKeyChecking=no tiptop@46.202.168.187 'cd /var/www/tip_top_game && ./deployment.sh ${env.BRANCH_NAME}'
+                           """
                 }
             }
         }
