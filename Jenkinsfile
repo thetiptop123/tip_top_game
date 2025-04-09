@@ -55,7 +55,7 @@ pipeline {
                         // La commande ssh exécute à distance le script de déploiement sur le VPS.
                         // On utilise la variable DEPLOY_DIR définie précédemment pour naviguer dans le bon dossier.
                         sh """
-                           ssh -o StrictHostKeyChecking=no tiptop@46.202.168.187 'cd /var/www/tip_top_game && ./deployment.sh ${env.BRANCH_NAME}'
+                           ssh -o StrictHostKeyChecking=no tiptop@46.202.168.187 'cd /var/www/${env.DEPLOY_DIR} && ./deployment.sh ${env.BRANCH_NAME}'
                            """
                     }
                 }
