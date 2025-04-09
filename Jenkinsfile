@@ -49,15 +49,13 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Utilisation de withCredentials pour récupérer la clé SSH et l'utilisateur
-                    withCredentials([
-                        sshUserPrivateKey(credentialsId: 'vps-ssh-credential', 
-                                            keyFileVariable: 'SSH_KEY', 
-                                            usernameVariable: 'SSH_USER')
-                    ]) {
-                        // Exécuter la commande SSH avec l'option -i qui spécifie la clé privée
+                    // On utilise le plugin SSH Agent pour se connecter au VPS
+                    // Assurez-vous d'avoir configuré le credential 'vps-ssh-credential' dans Jenkins
+                    sshagent(['vps-ssh-credential']) {
+                        // La commande ssh exécute à distance le script de déploiement sur le VPS.
+                        // On utilise la variable DEPLOY_DIR définie précédemment pour naviguer dans le bon dossier.
                         sh """
-                           ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SSH_USER}@46.202.168.187 'cd /var/www/${env.DEPLOY_DIR} && ./deployment.sh ${env.BRANCH_NAME}'
+                           ssh -o StrictHostKeyChecking=no tiptop@46.202.168.187 'cd /var/www/tip_top_game && ./deployment.sh ${env.BRANCH_NAME}'
                            """
                     }
                 }
