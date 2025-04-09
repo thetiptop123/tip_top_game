@@ -21,21 +21,31 @@ export BRANCH
 
 # Pull latest code
 echo "Entering on folder corresponding to $1 branch"
-case "$1" in
-        develop)
-                cd /var/www/tip_top_game
-                ;;
-        preprod)
-                cd /var/www/tip_top_game_preprod
-                ;;
-        main)
-                cd /var/www/tip_top_game_main
-                ;;
-        *)
-        echo "Error: Invalid branch name '$1'. Allowed values: develop, preprod, main."
+case "$BRANCH" in
+    develop)
+        DEPLOY_DIR="/var/www/tip_top_game"
+        ;;
+    preprod)
+        DEPLOY_DIR="/var/www/tip_top_game_preprod"
+        ;;
+    main)
+        DEPLOY_DIR="/var/www/tip_top_game_main"
+        ;;
+    *)
+        echo "Error: Invalid branch name '$BRANCH'. Allowed values: develop, preprod, main."
         exit 1
         ;;
 esac
+
+
+echo "Using deployment folder: $DEPLOY_DIR"
+
+# Se positionner dans le dossier de déploiement
+cd "$DEPLOY_DIR"
+
+# Ajouter dynamiquement le répertoire courant comme safe.directory pour Git
+echo "Adding $(pwd) to Git safe.directory"
+git config --global --add safe.directory "$(pwd)"
 
 echo "Changing branch to $BRANCH"
 git checkout $BRANCH
@@ -136,3 +146,5 @@ echo "Setting back containers from develop branch…"
 git checkout $BRANCH
 docker-compose stop $FRONTEND_CONTAINER $BACKEND_CONTAINER
 docker-compose up -d --build $FRONTEND_CONTAINER $BACKEND_CONTAINER
+
+echo "Deployment completed successfully."
