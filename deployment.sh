@@ -144,7 +144,7 @@ echo "Cleaning old backups..."
 
 echo "Setting back containers from develop branch…"
 git checkout $BRANCH
-docker-compose stop $FRONTEND_CONTAINER $BACKEND_CONTAINER
-docker-compose up -d --build $FRONTEND_CONTAINER $BACKEND_CONTAINER
+docker-compose stop frontend backend
+docker-compose up -d --build frontend backend
 
 echo "Deployment completed successfully."
