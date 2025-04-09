@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     environment {
-        // Répertoires de déploiement sur le VPS selon la branche
+        // Deployment directories on the VPS according to branch
         DEVELOP_DIR = 'tip_top_game'
         PREPROD_DIR  = 'tip_top_game_preprod'
         MAIN_DIR     = 'tip_top_game_main'
-        // Ces variables seront définies dynamiquement dans le stage "Set Environment"
+        // These variables will be defined dynamically in the "Set Environment" stage
         VERSION = ''
         DEPLOY_DIR = ''
     }
@@ -22,9 +22,6 @@ pipeline {
         stage('Set Environment') {
             steps {
                 script {
-                    // Affichez la valeur brute de BRANCH_NAME pour debug (encadrée par des quotes)
-                    echo "BRANCH_NAME (raw): '${env.BRANCH_NAME}'"
-                    // On retire les espaces superflus
                     def branchName = env.BRANCH_NAME ? env.BRANCH_NAME.trim() : ''
                     echo "BRANCH_NAME (trimmed): '${branchName}'"
 
@@ -48,20 +45,14 @@ pipeline {
         }
 
         stage('Deploy') {
+            // Run the deploy stage on the deploy agent
+            agent { label 'deploy' }
             steps {
                 script {
-                    // Utilisation de withCredentials pour récupérer la clé SSH et l'utilisateur
-                    withCredentials([
-                        sshUserPrivateKey(credentialsId: 'vps-ssh-credential', 
-                                            keyFileVariable: 'SSH_KEY', 
-                                            usernameVariable: 'SSH_USER')
-                    ]) {
-                        // Pour déboguer, on peut afficher brièvement le nom de l'utilisateur et vérifier que la variable SSH_KEY existe
-                        echo "SSH_USER: ${SSH_USER}"
-                        sh """
-                           ssh -vvv -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SSH_USER}@46.202.168.187 'cd /var/www/${env.DEPLOY_DIR} && ./deployment.sh ${env.BRANCH_NAME}'
-                           """
-                    }
+                    // Since the deploy agent is on the VPS, commands are local.
+                    // Ensure the deployment script is executable and then run it.
+                    sh "chmod +x /var/www/${env.DEPLOY_DIR}/deployment.sh"
+                    sh "cd /var/www/${env.DEPLOY_DIR} && ./deployment.sh ${env.BRANCH_NAME}"
                 }
             }
         }
