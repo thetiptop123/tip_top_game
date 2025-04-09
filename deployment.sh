@@ -137,7 +137,7 @@ RewriteRule ^(.*)$ /develop/$1 [L]" | sudo tee /var/www/.htaccess > /dev/null
 
 # Restart necessary services (Jenkins, Traefik, etc.) to apply changes
 echo "Restarting services..."
-docker restart $FRONTEND_CONTAINER $BACKEND_CONTAINER jenkins sonarqube traefik prometheus grafana
+docker restart $FRONTEND_CONTAINER $BACKEND_CONTAINER sonarqube traefik prometheus grafana
 
 # Clear old backups (keep last 7 days) without using --delete flag
 echo "Cleaning old backups..."
