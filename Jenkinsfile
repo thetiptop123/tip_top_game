@@ -1,22 +1,22 @@
 pipeline {
     agent any
 
-    // Define environment variables that map branch names to environment settings.
+    // Déclaration des variables d'environnement globales
     environment {
-        // Define your environment directories if used by your deployment.sh (adjust paths if needed)
+        // Répertoires de déploiement sur le VPS pour chaque branche
         DEVELOP_DIR = 'tip_top_game'
         PREPROD_DIR  = 'tip_top_game_preprod'
         MAIN_DIR     = 'tip_top_game_main'
-        
-        // For logging or passing version names to your script
+        // Variables pour la version d'environnement et le dossier de déploiement, qui seront définies dynamiquement
         VERSION = ''
+        DEPLOY_DIR = ''
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                // Jenkins automatically sets the BRANCH_NAME variable in a multibranch pipeline
+                // Jenkins effectue un checkout du code source
                 checkout scm
                 echo "Checked out branch: ${env.BRANCH_NAME}"
             }
@@ -25,8 +25,7 @@ pipeline {
         stage('Set Environment') {
             steps {
                 script {
-                    // Map branch names to versions/environments.
-                    // Adjust these conditions based on your workflow.
+                    // Selon la branche, nous configurons les variables VERSION et DEPLOY_DIR
                     if (env.BRANCH_NAME == 'develop') {
                         env.VERSION = 'test'
                         env.DEPLOY_DIR = env.DEVELOP_DIR
@@ -37,11 +36,9 @@ pipeline {
                         env.VERSION = 'prod'
                         env.DEPLOY_DIR = env.MAIN_DIR
                     } else {
-                        // For feature branches, we might not want to deploy automatically.
+                        // Si c'est une branche de feature, on arrête le pipeline
                         echo "Branch ${env.BRANCH_NAME} is a feature branch; skipping deployment."
-                        // Optionally, you can choose to run unit tests or other actions here.
                         currentBuild.result = 'SUCCESS'
-                        // Exit the pipeline early if no deployment is needed.
                         error("Not a deployment branch. Exiting pipeline.")
                     }
                     echo "Environment mapped: VERSION=${env.VERSION}, DEPLOY_DIR=${env.DEPLOY_DIR}"
@@ -52,12 +49,15 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Utiliser SSH pour se connecter au VPS et exécuter le script de déploiement.
+                    // On utilise le plugin SSH Agent pour se connecter au VPS
+                    // Assurez-vous d'avoir configuré le credential 'vps-ssh-credential' dans Jenkins
                     sshagent(['vps-ssh-credential']) {
-                        // Assurez-vous que l'adresse IP ou le DNS du VPS est correct et accessible depuis Jenkins.
+                        // La commande ssh exécute à distance le script de déploiement sur le VPS.
+                        // On utilise la variable DEPLOY_DIR définie précédemment pour naviguer dans le bon dossier.
                         sh """
-                           ssh -o StrictHostKeyChecking=no tiptop@46.202.168.187 'cd /var/www/tip_top_game && ./deployment.sh ${env.BRANCH_NAME}'
+                           ssh -o StrictHostKeyChecking=no tiptop@46.202.168.187 'cd /var/www/${env.DEPLOY_DIR} && ./deployment.sh ${env.BRANCH_NAME}'
                            """
+                    }
                 }
             }
         }
