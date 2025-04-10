@@ -110,18 +110,8 @@ images=($FRONTEND_IMAGE $BACKEND_IMAGE)
 
 for image in "${images[@]}"; do
   echo "Backing up $image to backup bucket"
-  docker save $image | gzip | rclone rcat s3remote:thetiptop-s3-backup/$(date +%Y-%m-%d)/$image.tar.gz  --s3-no-check-bucket
+  docker save $image | gzip | rclone rcat s3remote:thetiptop-s3-backup/$(date +%Y-%m-%d)/$VERSION/$image.tar.gz  --s3-no-check-bucket
 done
-
-
-#Clear old backups on bucket
-echo "Cleaning old versions..."
-if rclone lsd s3remote:thetiptop-s3-backup/$VERSION >/dev/null 2>&1; then
-    echo "Cleaning old versions..."
-    rclone delete s3remote:thetiptop-s3-backup/$VERSION/
-else
-    echo "Directory s3remote:thetiptop-$VERSION/ does not exist. Skipping deletion."
-fi
 
 # Ensure .htaccess file is correctly handling the routing
 echo "RewriteEngine On
