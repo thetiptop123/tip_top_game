@@ -123,12 +123,6 @@ else
     echo "Directory s3remote:thetiptop-$VERSION/ does not exist. Skipping deletion."
 fi
 
-
-# Sync frontend and backend to the corresponding S3 bucket without --delete
-echo "Syncing frontend & backend files to AWS S3..."
-rclone sync . s3remote:thetiptop-s3-backup/$VERSION
-docker save tip_top_game_backend | gzip | rclone rcat s3remote:thetiptop-s3-backup/$VERSION/tip_top_game_backend.tar
-
 # Ensure .htaccess file is correctly handling the routing
 echo "RewriteEngine On
 RewriteCond %{HTTP_HOST} ^yourdomain.com$
