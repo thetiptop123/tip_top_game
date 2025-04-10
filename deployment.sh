@@ -106,12 +106,12 @@ docker-compose up -d --remove-orphans  $FRONTEND_DOCKER_IMAGE_NAME $BACKEND_DOCK
 
 echo "Backing up Docker images to S3..."
 
-images=($FRONTEND_IMAGE $BACKEND_IMAGE)
+# images=($FRONTEND_IMAGE $BACKEND_IMAGE)
 
-for image in "${images[@]}"; do
-  echo "Backing up $image to backup bucket"
-  docker save $image | gzip | rclone rcat s3remote:thetiptop-s3-backup/$(date +%Y-%m-%d)/$VERSION/$image.tar.gz  --s3-no-check-bucket
-done
+# for image in "${images[@]}"; do
+#   echo "Backing up $image to backup bucket"
+#   docker save $image | gzip | rclone rcat s3remote:thetiptop-s3-backup/$(date +%Y-%m-%d)/$VERSION/$image.tar.gz  --s3-no-check-bucket
+# done
 
 # Ensure .htaccess file is correctly handling the routing
 echo "RewriteEngine On
