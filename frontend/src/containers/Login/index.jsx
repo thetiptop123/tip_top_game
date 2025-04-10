@@ -28,7 +28,7 @@ export default function Login() {
 
   const handleSignin = () => {
     axios
-      .post("http://46.202.168.187:5000/auth/login", {
+      .post(`${process.env.REACT_APP_API_URL}/auth/login`, { 
         email,
         password,
       })
@@ -156,27 +156,7 @@ export default function Login() {
             backgroundColor: Colors.lightGreen,
           }}
         >
-          <div className={styles.socialMediaBtns}>
-            <GoogleButton
-              label="Connexion avec Google"
-              onClick={() => {
-                console.log("Google button clicked");
-              }}
-            />
-            <FacebookLogin
-              appId="1088597931155576"
-              onSuccess={(response) => {
-                console.log("Login Success!", response);
-              }}
-              onFail={(error) => {
-                console.log("Login Failed!", error);
-              }}
-              onProfileSuccess={(response) => {
-                console.log("Get Profile Success!", response);
-              }}
-              className={styles.fbBtn}
-            />
-          </div>
+  
           <div className={styles.formContainer}>
             <div className={styles.inputContainer}>
               <Input
