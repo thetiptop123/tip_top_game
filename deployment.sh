@@ -152,7 +152,7 @@ docker-compose up -d --remove-orphans $FRONTEND_DOCKER_IMAGE_NAME $BACKEND_DOCKE
 
 echo "Ensuring .htaccess file is correctly handling the routing..."
 echo "RewriteEngine On
-RewriteCond %{HTTP_HOST} ^yourdomain.com$
+RewriteCond %{HTTP_HOST} ^dsp5-archi-f24a-15m-g2.com$
 RewriteCond %{REQUEST_URI} !^/(develop)/
 RewriteRule ^(.*)$ /develop/\$1 [L]" | sudo tee /var/www/.htaccess > /dev/null
 

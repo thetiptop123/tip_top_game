@@ -48,20 +48,20 @@ pipeline {
             }
         }
 
-// stage('Test-Backend') {
-//     agent {
-//         docker {
-//             image 'node:18'
-//             args '-u root:root'
-//         }
-//     }
-//     steps {
-//         dir('backend') {
-//             sh "npm install"
-//             sh "npm test"
-//         }
-//     }
-// }
+stage('Test-Backend') {
+    agent {
+        docker {
+            image 'node:18'
+            args '-u root:root'
+        }
+    }
+    steps {
+        dir('backend') {
+            sh "npm install"
+            sh "npm test"
+        }
+    }
+}
 
 stage('Test-Frontend') {
     agent {

@@ -20,11 +20,12 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Si l'utilisateur est déjà connecté, rediriger par défaut vers son profil
   useEffect(() => {
     if (states.token.length > 0) {
       navigate("/profile");
     }
-  }, []);
+  }, [states.token, navigate]);
 
   const handleSignin = () => {
     axios
@@ -35,6 +36,7 @@ export default function Login() {
       .then((res) => {
         console.log("res => ", res);
         if (res.data?.token) {
+          // Mettre à jour le contexte global avec les infos de l'utilisateur connecté
           dispatch({
             type: ActionsTypes.UPDATE,
             props: {
@@ -43,16 +45,22 @@ export default function Login() {
               phone: res.data?.user.phone,
               firstname: res.data?.user.userName.split(' ')[0],
               lastname: res.data?.user.userName.split(' ')[1],
+              // Vous pouvez aussi ajouter le userType si besoin :
+              userType: res.data?.user.userType,
             },
           });
-          navigate("/profile");
+          // Redirection en fonction du type d'utilisateur
+          if (res.data?.user.userType === "admin") {
+            // Si l'utilisateur est admin, rediriger vers le dashboard
+            navigate("/dashboard/users");
+          } else {
+            // Sinon, rediriger vers le profil
+            navigate("/profile");
+          }
         }
       })
       .catch((error) => {
-        console.error(
-          "Error =>",
-          error.response ? error.response.data : error.message
-        );
+        console.error("Error =>", error.response ? error.response.data : error.message);
       });
   };
 
@@ -74,10 +82,10 @@ export default function Login() {
           }}
         >
           <p>
-            The Tip Top vous propose un jeu-concours pour vous fediliser et
-            répondre à vos eventuels besoin, et vous faire découvrire ses
+            The Tip Top vous propose un jeu-concours pour vous fidéliser et
+            répondre à vos éventuels besoins, et vous faire découvrir ses
             différentes gammes de thé de très grande qualité, elle est parmi les
-            leaders dans le domaine. à vous de tenter votre chance.
+            leaders dans le domaine. À vous de tenter votre chance.
           </p>
           <p style={{ color: Colors.darkGreen, fontWeight: 700 }}>
             Lire la suite...
@@ -118,7 +126,7 @@ export default function Login() {
                 </div>
                 <div className={styles.text3}>
                   Thé tip top, très bonne qualité, bon service, rien à
-                  recomander, je recomende fortement.
+                  recommander, je recommande fortement.
                 </div>
               </div>
             </div>
@@ -142,7 +150,7 @@ export default function Login() {
                 </div>
                 <div className={styles.text3}>
                   Thé tip top, très bonne qualité, bon service, rien à
-                  recomander, je recomende fortement.
+                  recommander, je recommande fortement.
                 </div>
               </div>
             </div>
@@ -156,7 +164,6 @@ export default function Login() {
             backgroundColor: Colors.lightGreen,
           }}
         >
-  
           <div className={styles.formContainer}>
             <div className={styles.inputContainer}>
               <Input
