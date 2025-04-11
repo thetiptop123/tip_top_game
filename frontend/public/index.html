@@ -2,21 +2,46 @@
 <html lang="fr">
   <head>
     <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-N8L23MZ5');</script>
-  <!-- End Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-N8L23MZ5');</script>
+    <!-- End Google Tag Manager -->
+
     <meta charset="utf-8" />
     <link rel="icon" href="logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Participez à notre jeu concours Thé Tip Top et tentez de gagner une sélection exclusive de nos meilleurs thés ! 
+    <meta name="description" content="Participez à notre jeu concours Thé Tip Top et tentez de gagner une sélection exclusive de nos meilleurs thés !
       🌟 Découvrez des saveurs uniques et faites de chaque tasse un moment d'exception. 🍵"/>
+
+    <!-- SEO Enhancements -->
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://dsp5-archi-f24a-15m-g2.com/" />
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Jeu-concours Thé Tip Top" />
+    <meta property="og:description" content="Participez à notre jeu concours Thé Tip Top et tentez de gagner une sélection exclusive de nos meilleurs thés !" />
+    <meta property="og:url" content="https://dsp5-archi-f24a-15m-g2.com/" />
+    <meta property="og:type" content="website" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://dsp5-archi-f24a-15m-g2.com/",
+      "name": "Jeu-concours Thé Tip Top",
+      "description": "Participez à notre jeu concours Thé Tip Top et tentez de gagner une sélection exclusive de nos meilleurs thés !",
+      "publisher": {
+        "@type": "DSP Projet Student",
+        "name": "Mouad SELLAK"
+      }
+    }
+    </script>
+
     <link rel="apple-touch-icon" href="logo.png" />
-    <link rel="manifest" href="logo.png" />
-   
     <title>Jeu-concours Thé Tip Top</title>
   </head>
   <body>
@@ -26,6 +51,42 @@
     <!-- End Google Tag Manager (noscript) -->
 
     <div id="root"></div>
-    
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-consent-banner" style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #333; color: #fff; padding: 15px; text-align: center; display: none;">
+      Nous utilisons des cookies pour améliorer votre expérience sur notre site. En continuant à naviguer, vous acceptez notre utilisation des cookies.
+      <button id="cookie-accept" style="margin-left: 15px; padding: 5px 10px;">Accepter</button>
+    </div>
+
+    <script>
+      // Helper functions to manage cookies
+      function getCookie(name) {
+          let value = "; " + document.cookie;
+          let parts = value.split("; " + name + "=");
+          if (parts.length === 2) return parts.pop().split(";").shift();
+      }
+
+      function setCookie(name, value, days) {
+          var expires = "";
+          if (days) {
+              var date = new Date();
+              date.setTime(date.getTime() + (days*24*60*60*1000));
+              expires = "; expires=" + date.toUTCString();
+          }
+          document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+      }
+
+      // Show banner if consent not given
+      document.addEventListener("DOMContentLoaded", function() {
+          if (!getCookie("cookieConsent")) {
+              var banner = document.getElementById("cookie-consent-banner");
+              banner.style.display = "block";
+              document.getElementById("cookie-accept").addEventListener("click", function() {
+                  setCookie("cookieConsent", "true", 365);
+                  banner.style.display = "none";
+              });
+          }
+      });
+    </script>
   </body>
 </html>
