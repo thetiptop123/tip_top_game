@@ -48,35 +48,35 @@ pipeline {
             }
         }
 
-// stage('Test-Backend') {
-//     agent {
-//         docker {
-//             image 'node:18'
-//             args '-u root:root'
-//         }
-//     }
-//     steps {
-//         dir('backend') {
-//             sh "npm install"
-//             sh "npm test"
-//         }
-//     }
-// }
+stage('Test-Backend') {
+    agent {
+        docker {
+            image 'node:18'
+            args '-u root:root'
+        }
+    }
+    steps {
+        dir('backend') {
+            sh "npm install"
+            sh "npm test"
+        }
+    }
+}
 
-// stage('Test-Frontend') {
-//     agent {
-//         docker {
-//             image 'node:18'
-//             args '-u root:root'
-//         }
-//     }
-//     steps {
-//         dir('frontend') {
-//             sh "npm install"
-//             sh "npm test"
-//         }
-//     }
-// }
+stage('Test-Frontend') {
+    agent {
+        docker {
+            image 'node:18'
+            args '-u root:root'
+        }
+    }
+    steps {
+        dir('frontend') {
+            sh "npm install"
+            sh "npm test"
+        }
+    }
+}
 
         stage('Deploy') {
             // Run the deploy stage on the deploy agent (which is our VPS)
