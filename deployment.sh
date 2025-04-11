@@ -130,11 +130,11 @@ docker-compose up -d --remove-orphans $FRONTEND_DOCKER_IMAGE_NAME $BACKEND_DOCKE
 # Mise à jour du fichier .htaccess pour la réécriture d'URL
 ###############################################################################
 
-echo "Ensuring .htaccess file is correctly handling the routing..."
-echo "RewriteEngine On
-RewriteCond %{HTTP_HOST} ^dsp5-archi-f24a-15m-g2.com$
-RewriteCond %{REQUEST_URI} !^/(develop)/
-RewriteRule ^(.*)$ /develop/\$1 [L]" | sudo tee /var/www/.htaccess > /dev/null
+# echo "Ensuring .htaccess file is correctly handling the routing..."
+# echo "RewriteEngine On
+# RewriteCond %{HTTP_HOST} ^dsp5-archi-f24a-15m-g2.com$
+# RewriteCond %{REQUEST_URI} !^/(develop)/
+# RewriteRule ^(.*)$ /develop/\$1 [L]" | sudo tee /var/www/.htaccess > /dev/null
 
 ###############################################################################
 # Redémarrage des services nécessaires pour appliquer les modifications
