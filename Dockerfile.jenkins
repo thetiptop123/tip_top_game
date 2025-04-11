@@ -1,0 +1,14 @@
+FROM jenkins/jenkins:lts
+USER root
+
+# Installer docker-compose (ici, on utilise la version 2.20.2 comme exemple)
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+    chmod +x /usr/local/bin/docker-compose && \
+    apt-get clean
+
+# Optionnel : Créer un lien symbolique dans /usr/bin si nécessaire
+RUN ln -sf /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+USER jenkins

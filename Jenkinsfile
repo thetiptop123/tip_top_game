@@ -1,68 +1,92 @@
+// Declare shared variables outside the pipeline block so they persist
+def sharedVersion = ""
+def sharedDeployDir = ""
+
 pipeline {
     agent any
 
-    // Define environment variables that map branch names to environment settings.
     environment {
-        // Define your environment directories if used by your deployment.sh (adjust paths if needed)
+        // Deployment directories on the VPS according to branch
         DEVELOP_DIR = 'tip_top_game'
         PREPROD_DIR  = 'tip_top_game_preprod'
         MAIN_DIR     = 'tip_top_game_main'
-        
-        // For logging or passing version names to your script
-        VERSION = ''
+        // (Do not attempt to modify these global environment variables later)
     }
 
     stages {
-
         stage('Checkout') {
             steps {
-                // Jenkins automatically sets the BRANCH_NAME variable in a multibranch pipeline
                 checkout scm
-                echo "Checked out branch: ${env.BRANCH_NAME}"
+                echo "Checked out branch: '${env.BRANCH_NAME}'"
             }
         }
 
         stage('Set Environment') {
             steps {
                 script {
-                    // Map branch names to versions/environments.
-                    // Adjust these conditions based on your workflow.
-                    if (env.BRANCH_NAME == 'develop') {
-                        env.VERSION = 'test'
-                        env.DEPLOY_DIR = env.DEVELOP_DIR
-                    } else if (env.BRANCH_NAME == 'preprod') {
-                        env.VERSION = 'preprod'
-                        env.DEPLOY_DIR = env.PREPROD_DIR
-                    } else if (env.BRANCH_NAME == 'main') {
-                        env.VERSION = 'prod'
-                        env.DEPLOY_DIR = env.MAIN_DIR
+                    // Trim and assign branch name
+                    def branchName = env.BRANCH_NAME ? env.BRANCH_NAME.trim() : ''
+                    echo "BRANCH_NAME (trimmed): '${branchName}'"
+
+                    // Set shared variables based on branch
+                    if (branchName == 'develop') {
+                        sharedVersion = 'test'
+                        sharedDeployDir = env.DEVELOP_DIR
+                    } else if (branchName == 'preprod') {
+                        sharedVersion = 'preprod'
+                        sharedDeployDir = env.PREPROD_DIR
+                    } else if (branchName == 'main') {
+                        sharedVersion = 'prod'
+                        sharedDeployDir = env.MAIN_DIR
                     } else {
-                        // For feature branches, we might not want to deploy automatically.
-                        echo "Branch ${env.BRANCH_NAME} is a feature branch; skipping deployment."
-                        // Optionally, you can choose to run unit tests or other actions here.
+                        echo "Branch '${branchName}' is a feature branch; skipping deployment."
                         currentBuild.result = 'SUCCESS'
-                        // Exit the pipeline early if no deployment is needed.
                         error("Not a deployment branch. Exiting pipeline.")
                     }
-                    echo "Environment mapped: VERSION=${env.VERSION}, DEPLOY_DIR=${env.DEPLOY_DIR}"
+                    echo "Environment mapped: VERSION=${sharedVersion}, DEPLOY_DIR=${sharedDeployDir}"
                 }
             }
         }
 
+// stage('Test-Backend') {
+//     agent {
+//         docker {
+//             image 'node:18'
+//             args '-u root:root'
+//         }
+//     }
+//     steps {
+//         dir('backend') {
+//             sh "npm install"
+//             sh "npm test"
+//         }
+//     }
+// }
+
+stage('Test-Frontend') {
+    agent {
+        docker {
+            image 'node:18'
+            args '-u root:root'
+        }
+    }
+    steps {
+        dir('frontend') {
+            sh "npm install"
+            sh "npm test"
+        }
+    }
+}
+
         stage('Deploy') {
+            // Run the deploy stage on the deploy agent (which is our VPS)
+            agent { label 'deploy' }
             steps {
                 script {
-                    // Change to the appropriate directory (if your repository structure demands it)
-                    // If your repository already contains all code and the deployment.sh script is at the root,
-                    // you may not need to change directories. If you need different directories per environment,
-                    // then your deployment.sh should handle that too.
-                    //
-                    // Here, we assume that deployment.sh is at the root and works by itself, based on the branch.
-                    //
-                    // Make sure the deployment script is executable.
-                    sh "chmod +x deployment.sh"
-                    // Call the deployment script with the branch name as a parameter.
-                    sh "./deployment.sh ${env.BRANCH_NAME}"
+                    echo "Deploying on agent with directory: ${sharedDeployDir}"
+                    // Use the shared variable instead of env.DEPLOY_DIR
+                    sh "chmod +x /var/www/${sharedDeployDir}/deployment.sh"
+                    sh "cd /var/www/${sharedDeployDir} && ./deployment.sh ${env.BRANCH_NAME}"
                 }
             }
         }
@@ -70,10 +94,10 @@ pipeline {
 
     post {
         success {
-            echo "Deployment for branch ${env.BRANCH_NAME} (${env.VERSION}) completed successfully."
+            echo "Deployment for branch '${env.BRANCH_NAME}' (${sharedVersion}) completed successfully."
         }
         failure {
-            echo "Deployment for branch ${env.BRANCH_NAME} failed. Please check the Jenkins log."
+            echo "Deployment for branch '${env.BRANCH_NAME}' failed. Please check the Jenkins log."
         }
     }
 }
