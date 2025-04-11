@@ -52,10 +52,11 @@
 
     <div id="root"></div>
 
-    <!-- Cookie Consent Banner -->
+    <!-- Cookie Consent Banner with Accept and Deny options -->
     <div id="cookie-consent-banner" style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #333; color: #fff; padding: 15px; text-align: center; display: none;">
       Nous utilisons des cookies pour améliorer votre expérience sur notre site. En continuant à naviguer, vous acceptez notre utilisation des cookies.
-      <button id="cookie-accept" style="margin-left: 15px; padding: 5px 10px;">Accepter</button>
+      <button id="cookie-accept" style="margin: 5px; padding: 5px 10px;">Accepter</button>
+      <button id="cookie-deny" style="margin: 5px; padding: 5px 10px;">Refuser</button>
     </div>
 
     <script>
@@ -65,7 +66,7 @@
           let parts = value.split("; " + name + "=");
           if (parts.length === 2) return parts.pop().split(";").shift();
       }
-
+      
       function setCookie(name, value, days) {
           var expires = "";
           if (days) {
@@ -75,17 +76,25 @@
           }
           document.cookie = name + "=" + (value || "")  + expires + "; path=/";
       }
-
+      
       // Show banner if consent not given
       document.addEventListener("DOMContentLoaded", function() {
           if (!getCookie("cookieConsent")) {
               var banner = document.getElementById("cookie-consent-banner");
               banner.style.display = "block";
-              document.getElementById("cookie-accept").addEventListener("click", function() {
-                  setCookie("cookieConsent", "true", 365);
-                  banner.style.display = "none";
-              });
           }
+          
+          document.getElementById("cookie-accept").addEventListener("click", function() {
+              setCookie("cookieConsent", "accepted", 365);
+              document.getElementById("cookie-consent-banner").style.display = "none";
+              // Optionally, initialize cookies-dependent services here.
+          });
+          
+          document.getElementById("cookie-deny").addEventListener("click", function() {
+              setCookie("cookieConsent", "denied", 365);
+              document.getElementById("cookie-consent-banner").style.display = "none";
+              // Optionally, disable cookies-dependent services here.
+          });
       });
     </script>
   </body>
