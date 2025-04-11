@@ -1,4 +1,5 @@
-import React from 'react';
+// src/App.jsx
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./containers/Home";
 import About from "./containers/About";
@@ -6,14 +7,15 @@ import Contact from "./containers/Contact";
 import Game from "./containers/Game";
 import Rules from "./containers/Rules";
 import Profile from "./containers/Profile";
-import Header from "./containers/Header/index";
+import Header from "./containers/Header";
 import Footer from "./containers/Footer";
 import GlobalProvider from "./contexts";
 import Prize from "./containers/Prize";
 import Legalites from "./containers/Legalites";
-import SignUp from './containers/SignUp';
-import Login from './containers/Login';
-import Edit from './containers/Edit';
+import SignUp from "./containers/SignUp";
+import Login from "./containers/Login";
+import Edit from "./containers/Edit";
+import DashboardUsers from "./containers/DashboardUsers"; // Import du composant dashboard
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/edit" element={<Edit />} />
+          {/* Nouvelle route pour le dashboard admin */}
+          <Route path="/dashboard/users" element={<DashboardUsers />} />
         </Routes>
         <Footer />
       </BrowserRouter>
