@@ -48,6 +48,18 @@ pipeline {
             }
         }
 
+        stage('Test') {
+            steps {
+                script {
+                    echo "Starting tests for branch '${env.BRANCH_NAME}'..."
+                    // Example commands for running tests:
+                    // If your project uses npm tests for backend or frontend, uncomment or adjust accordingly.
+                    sh "npm install"
+                    sh "npm test"
+                }
+            }
+        }
+
         stage('Deploy') {
             // Run the deploy stage on the deploy agent (which is our VPS)
             agent { label 'deploy' }
