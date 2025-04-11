@@ -21,7 +21,7 @@ RUN npm install -g serve
 EXPOSE 4200
 
 # Lancer l'application
-# CMD ["serve", "-s", "build"]
+CMD ["serve", "-s", "build"]
 
-# Lancer le serveur de développement
-CMD ["npm", "start"]
+# # Lancer le serveur de développement
+# CMD ["npm", "start"]
