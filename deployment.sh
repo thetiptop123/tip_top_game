@@ -44,27 +44,7 @@ cd "$DEPLOY_DIR"
 echo "Adding $(pwd) to Git safe.directory"
 git config --global --add safe.directory "$(pwd)"
 
-###############################################################################
-# Vérification des modifications locales sur le VPS avant de changer de branche,
-# puis sauvegarde de ces modifications en créant un patch dans un dossier de backup.
-###############################################################################
 
-echo "Checking for local modifications on VPS files..."
-# La commande git diff-index vérifie s'il existe des modifications non validées
-if ! git diff-index --quiet HEAD --; then
-    echo "Local modifications detected. Backing up these changes before pulling from GitHub."
-    
-    # Création d'un dossier de backup avec date et heure dans /tmp
-    BACKUP_DIR="/tmp/deploy_backup_$(date +%Y%m%d_%H%M%S)"
-    mkdir -p "$BACKUP_DIR"
-    
-    # Création d'un patch contenant l'ensemble des changements non commités
-    git diff > "$BACKUP_DIR/local_changes.patch"
-    
-    echo "Backup completed. Local changes saved as patch in: $BACKUP_DIR/local_changes.patch"
-else
-    echo "No local modifications detected."
-fi
 
 ###############################################################################
 # Changement de branche et récupération du code depuis GitHub
