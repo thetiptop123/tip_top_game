@@ -48,16 +48,30 @@ pipeline {
             }
         }
 
-        stage('Test') {
+stage('Test-Backend') {
     agent {
         docker {
-            image 'node:18' // or any other Node version image
+            image 'node:18'
             args '-u root:root'
         }
     }
     steps {
-        script {
-            echo "Starting tests for branch '${env.BRANCH_NAME}'..."
+        dir('backend') {
+            sh "npm install"
+            sh "npm test"
+        }
+    }
+}
+
+stage('Test-Frontend') {
+    agent {
+        docker {
+            image 'node:18'
+            args '-u root:root'
+        }
+    }
+    steps {
+        dir('frontend') {
             sh "npm install"
             sh "npm test"
         }
