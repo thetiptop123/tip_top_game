@@ -1,68 +1,75 @@
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Input from "../../components/Input";
 import Colors from "../../utils/constants/colors";
-import React, { useEffect, useState } from "react";
 import { ActionsTypes, useGlobal } from "../../contexts";
 import CreateAccountBtn from "../../components/CreateAccountBtn";
 import { useNavigate } from "react-router-dom";
 import Confetti from "react-confetti";
 
 export default function Game() {
-  const [states, dispatch] = useGlobal();
-  const [code, setCode] = useState("");
+  const [state, dispatch] = useGlobal();
+  const [ticketNumber, setTicketNumber] = useState("");
   const [messageSuccess, setMessageSuccess] = useState("");
   const [messageError, setMessageError] = useState("");
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
-  const [isCodeValid, setIsCodeValid] = useState(false);
-
+  const [isWin, setIsWin] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleValidate = () => {
-    axios
-      .post(
-        "http://46.202.168.187:5000/recordGame/jeux",
+  const handlePlayGame = async () => {
+    setLoading(true);
+    setMessageSuccess("");
+    setMessageError("");
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/game/play`,
+        { ticketNumber },
         {
-          ticketNumber: code,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${states.token}`,
-          },
+          headers: { Authorization: `Bearer ${state.token}` },
         }
-      )
-      .then((res) => {
-        setIsButtonClicked(true);
-        if (res.data?.ticket) {
-          setMessageSuccess(res.data?.message);
+      );
+
+      // Assuming your backend returns { success: true, message: "Congratulations, you won ..." }
+      if (response.data.success) {
+        setMessageSuccess(response.data.message);
+        setIsWin(true);
+        // Optionally update global state with any additional info provided by the backend
+        if (response.data.ticket) {
           dispatch({
             type: ActionsTypes.UPDATE,
             props: {
-              ticketCode: res.data?.ticket,
-              prize: res.data?.message,
+              ticketCode: response.data.ticket,
+              prize: response.data.message,
             },
           });
-          setIsCodeValid(true);
         }
-      })
-      .catch((error) => {
-        setIsButtonClicked(true);
+      } else {
+        // Not expected, but just in case
+        setMessageError(response.data.message);
+      }
+    } catch (error) {
+      if (error.response && error.response.data) {
         setMessageError(error.response.data.message);
-        console.error(
-          "Error =>",
-          error.response ? error.response.data : error.message
-        );
-      });
+      } else {
+        setMessageError("An error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    if (states.email.length === 0) {
+    // Redirect to profile if the user is not logged in
+    if (!state.email) {
       navigate("/profile");
     }
-  }, [states.email]);
+  }, [state.email, navigate]);
 
   return (
     <>
-      {isCodeValid && <Confetti width={1400} height={800} recycle={true} />}
+      {isWin && (
+        <Confetti width={window.innerWidth} height={window.innerHeight} recycle={true} />
+      )}
       <div
         style={{
           display: "flex",
@@ -70,32 +77,28 @@ export default function Game() {
           justifyContent: "center",
           alignItems: "center",
           minHeight: "100vh",
-          paddingTop: 30,
-          paddingBottom: 30,
-          paddingLeft: 90,
-          paddingRight: 40,
+          padding: 30,
         }}
       >
-        <div
-          style={{ display: "flex", justifyContent: "space-between", gap: 20 }}
-        >
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
           <Input
             width={219}
             height={56}
-            onChange={(e) => setCode(e.target.value)}
-            value={code}
-            placeholder="Code..."
+            placeholder="Enter Ticket Number..."
+            value={ticketNumber}
+            onChange={(e) => setTicketNumber(e.target.value)}
           />
-          <CreateAccountBtn onClick={handleValidate}>Valider</CreateAccountBtn>
+          <CreateAccountBtn onClick={handlePlayGame}>
+            {loading ? "Processing..." : "Play"}
+          </CreateAccountBtn>
         </div>
-        {isButtonClicked ? (
-          messageSuccess.length > 0 ? (
-            <p style={{ color: Colors.lightGreen }}>{messageSuccess}</p>
-          ) : (
-            <p style={{ color: "red" }}>{messageError}</p>
-          )
-        ) : (
-          <></>
+        {messageSuccess && (
+          <p style={{ marginTop: 20, color: Colors.lightGreen }}>
+            {messageSuccess}
+          </p>
+        )}
+        {messageError && (
+          <p style={{ marginTop: 20, color: "red" }}>{messageError}</p>
         )}
       </div>
     </>
