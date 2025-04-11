@@ -153,3 +153,6 @@ docker-compose stop frontend backend
 docker-compose up -d --build frontend backend
 
 echo "Deployment completed successfully."
+
+
+
